@@ -8,7 +8,7 @@ const LocationPickerMap = dynamic(() => import('@/components/LocationPickerMap')
   loading: () => <div className="h-full w-full flex items-center justify-center bg-slate-100 text-slate-500 rounded-xl animate-pulse">Đang tải bản đồ định vị...</div>
 });
 
-const GOOGLE_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzb-Rp5U5_DJymTK0PRCvxDMRIyGaMRZPpQrbCxU-zu4nMlXy8x6YS8Z2Dswfx88Jaeug/exec';
+const GOOGLE_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbx7EAwnF2wGMLkJvGqXerxu6Nxw-rez_kVcHLvRxkSpLYLJLFAbLhjxJDpoLQuMD7Wo3A/exec';
 const CLOUDINARY_CLOUD_NAME = 'ds6k0kfbz'; 
 const CLOUDINARY_UPLOAD_PRESET = 'tranhuyland';
 const ADMIN_PASSWORD = '123';
