@@ -30,7 +30,8 @@ const INITIAL_FORM_STATE = {
   moTa: '', 
   tag: 'all',
   isMatTien: false,
-  ngayDang: ''
+  ngayDang: '',
+  slug: ''
 };
 
 export default function DangTinPage() {
