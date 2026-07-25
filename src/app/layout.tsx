@@ -20,13 +20,69 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tranhuyland.vn"),
-  title: "Trần Huy Land | Kho Nhà Đất Chính Chủ Hải Châu Cẩm Lệ Đà Nẵng",
-  description: "Mua bán, ký gửi nhà đất chính chủ uy tín tại Hải Châu, Cẩm Lệ, Đà Nẵng. Cập nhật giỏ hàng thực tế mỗi ngày: Nhà mặt tiền Cẩm Bá Thước, nhà kiệt ô tô Cách Mạng Tháng 8. Pháp lý minh bạch, có sẵn sổ đỏ bản vẽ xem ngay.",
-  keywords: ["nhà đất đà nẵng", "nhà đất chính chủ hải châu", "ký gửi nhà đất cẩm lệ", "nhà đất trần huy", "mua nhà đà nẵng", "bán đất cẩm lệ"],
-  robots: "index, follow, max-image-preview:large",
-  alternates: { canonical: "https://tranhuyland.vn" }
-};
 
+  title: "Trần Huy Land | Kho Nhà Đất Chính Chủ Hải Châu Cẩm Lệ Đà Nẵng",
+
+  description:
+    "Mua bán, ký gửi nhà đất chính chủ uy tín tại Hải Châu, Cẩm Lệ, Đà Nẵng. Cập nhật giỏ hàng thực tế mỗi ngày: Nhà mặt tiền Cẩm Bá Thước, nhà kiệt ô tô Cách Mạng Tháng 8. Pháp lý minh bạch, có sẵn sổ đỏ bản vẽ xem ngay.",
+
+  keywords: [
+    "nhà đất đà nẵng",
+    "nhà đất chính chủ hải châu",
+    "ký gửi nhà đất cẩm lệ",
+    "nhà đất trần huy",
+    "mua nhà đà nẵng",
+    "bán đất cẩm lệ",
+  ],
+
+  alternates: {
+    canonical: "https://tranhuyland.vn",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/apple-touch-icon.png",
+  },
+
+  openGraph: {
+    type: "website",
+    locale: "vi_VN",
+    url: "https://tranhuyland.vn",
+    siteName: "Trần Huy Land",
+    title: "Trần Huy Land | Kho Nhà Đất Chính Chủ Hải Châu Cẩm Lệ Đà Nẵng",
+    description:
+      "Mua bán, ký gửi nhà đất chính chủ uy tín tại Đà Nẵng. Cập nhật nhà đất thực tế mỗi ngày.",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Trần Huy Land",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Trần Huy Land",
+    description:
+      "Kho nhà đất chính chủ Đà Nẵng cập nhật mỗi ngày.",
+    images: ["/og-image.jpg"],
+  },
+};
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi" className={plusJakartaSans.variable} suppressHydrationWarning>
