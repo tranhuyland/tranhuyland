@@ -200,9 +200,9 @@ export default async function BlogDetailPage({ params }: Props) {
             <span className="bg-orange-500 text-white text-[11px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full mb-4 shadow-sm">
               Đồng hành cùng nhà đầu tư
             </span>
-            <h3 className="text-xl md:text-2xl font-extrabold mb-3 text-white">
+            <h2 className="text-xl md:text-2xl font-extrabold mb-3 text-white">
               Bạn cần tìm Bất động sản thực tế khớp với tiêu chí này?
-            </h3>
+            </h2>
             <p className="text-slate-300 text-sm md:text-base mb-8 leading-relaxed">
               Trần Huy Land nắm giữ giỏ hàng hơn 500+ sản phẩm chính chủ tại Hải Châu, Cẩm Lệ và rải rác đắc địa khắp Đà Nẵng. Minh bạch pháp lý, làm việc trực tiếp giá gốc.
             </p>
