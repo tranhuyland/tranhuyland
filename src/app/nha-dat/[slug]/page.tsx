@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const priceText = item.gia || item.Gia || item.price || "Liên hệ";
   const areaText = item.dienTich || item.DienTich || item.dientich || "Chưa rõ";
   const locationText = item.khuVucFull || item.khuvucFull || item.diachi || "Đà Nẵng";
-  const imageSeo = layUrlAnhChuan(item.anh || item.Anh) || "/og-image.jpg";
+  const imageSeo = layUrlAnhChuan(item.anh || item.Anh) || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630&q=80";
   const canonicalUrl = `/nha-dat/${slug}`;
   const title = `${titleText} - Giá: ${priceText}`;
   const description = `Bán nhà đất chính chủ tại ${locationText}. Diện tích: ${areaText}, giá công khai: ${priceText}. Sổ hồng chính chủ, hỗ trợ thương lượng giá trực tiếp.`;

@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Lấy ảnh bìa, nếu không có thì lấy logo mặc định để đảm bảo không bị lỗi ảnh trắng
   const imageUrl = blog.image && blog.image.startsWith('http')
     ? blog.image
-    : '/og-image.jpg';
+    : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630&q=80';
 
   const canonicalUrl = `/blog/${slug}`;
   const description = blog.excerpt || "Tư vấn và chia sẻ kinh nghiệm đầu tư bất động sản chuyên sâu tại Đà Nẵng.";
