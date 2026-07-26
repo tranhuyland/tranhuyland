@@ -10,6 +10,7 @@ import RelatedProducts from "@/components/RelatedProducts";
 import Link from "next/link";
 import { Home, ChevronRight } from "lucide-react";
 import { cache } from "react";
+import type { Metadata } from "next";
 
 export const revalidate = 60;
 
@@ -45,28 +46,59 @@ const getPropertyBySlug = async (slug: string) => {
   };
 };
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const { item } = await getPropertyBySlug(slug);
 
-  if (!item) return { title: "Không tìm thấy sản phẩm - Trần Huy Land" };
+  if (!item) {
+    return {
+      title: "Không tìm thấy sản phẩm",
+      description: "Bất động sản này không tồn tại hoặc đã được bán.",
+      robots: { index: false, follow: false },
+    };
+  }
 
   const titleText = item.tieude || item.Tieude || item.title || "Chi tiết bất động sản";
   const priceText = item.gia || item.Gia || item.price || "Liên hệ";
   const areaText = item.dienTich || item.DienTich || item.dientich || "Chưa rõ";
   const locationText = item.khuVucFull || item.khuvucFull || item.diachi || "Đà Nẵng";
-  const imageSeo = layUrlAnhChuan(item.anh || item.Anh) || "https://tranhuyland.vn/logo.png";
+  const imageSeo = layUrlAnhChuan(item.anh || item.Anh) || "/og-image.jpg";
+  const canonicalUrl = `/nha-dat/${slug}`;
+  const title = `${titleText} - Giá: ${priceText}`;
+  const description = `Bán nhà đất chính chủ tại ${locationText}. Diện tích: ${areaText}, giá công khai: ${priceText}. Sổ hồng chính chủ, hỗ trợ thương lượng giá trực tiếp.`;
 
   return {
-    title: `${titleText} - Giá: ${priceText} | Trần Huy Land`,
-    description: `Bán nhà đất chính chủ tại ${locationText}. Diện tích: ${areaText}, giá công khai: ${priceText}. Sổ hồng chính chủ, hỗ trợ thương lượng giá trực tiếp.`,
+    title,
+    description,
+    keywords: [
+      titleText,
+      `bán nhà ${locationText}`,
+      `nhà đất ${item.khuVuc || ""}`,
+      item.loaiHinh || "nhà đất",
+      priceText,
+      "nhà đất đà nẵng",
+      "trần huy land",
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
     openGraph: {
-      title: titleText,
-      description: `Diện tích ${areaText} - Giá ${priceText} tại ${locationText}.`,
-      url: `https://tranhuyland.vn/nha-dat/${slug}`,
+      title,
+      description,
+      url: canonicalUrl,
       siteName: "Trần Huy Land",
       images: [{ url: imageSeo, width: 1200, height: 630, alt: titleText }],
-      type: "website",
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageSeo],
     },
   };
 }

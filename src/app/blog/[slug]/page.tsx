@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -16,25 +17,46 @@ interface Props {
 }
 
 // 🌐 HÀM 1: TỰ ĐỘNG SINH META SEO CHUẨN GOOGLE & MẠNG XÃ HỘI
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const blogs = await getBlogData();
   const blog = blogs.find(b => b.slug === slug);
 
-  if (!blog) return { title: "Không tìm thấy nội dung - Trần Huy Land" };
+  if (!blog) return {
+    title: "Không tìm thấy nội dung",
+    description: "Bài viết không tồn tại hoặc đã bị gỡ khỏi hệ thống.",
+    robots: { index: false, follow: false },
+  };
 
   // Lấy ảnh bìa, nếu không có thì lấy logo mặc định để đảm bảo không bị lỗi ảnh trắng
-  const imageUrl = blog.image && blog.image.startsWith('http') 
-    ? blog.image 
-    : 'https://www.tranhuyland.vn/logo.png'; 
+  const imageUrl = blog.image && blog.image.startsWith('http')
+    ? blog.image
+    : '/og-image.jpg';
+
+  const canonicalUrl = `/blog/${slug}`;
+  const description = blog.excerpt || "Tư vấn và chia sẻ kinh nghiệm đầu tư bất động sản chuyên sâu tại Đà Nẵng.";
 
   return {
-    title: `${blog.title} | Trần Huy Land`,
-    description: blog.excerpt || "Tư vấn và chia sẻ kinh nghiệm đầu tư bất động sản chuyên sâu tại Đà Nẵng.",
+    title: blog.title,
+    description,
+    keywords: [
+      blog.title,
+      "tư vấn bất động sản đà nẵng",
+      "kinh nghiệm mua nhà đất",
+      "pháp lý sổ đỏ",
+      "thị trường bất động sản",
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
     openGraph: {
       title: blog.title,
-      description: blog.excerpt || "Tư vấn và chia sẻ kinh nghiệm đầu tư bất động sản chuyên sâu tại Đà Nẵng.",
-      url: `https://www.tranhuyland.vn/blog/${slug}`,
+      description,
+      url: canonicalUrl,
       siteName: "Trần Huy Land",
       images: [
         {
@@ -49,7 +71,7 @@ export async function generateMetadata({ params }: Props) {
     twitter: {
       card: "summary_large_image",
       title: blog.title,
-      description: blog.excerpt,
+      description,
       images: [imageUrl],
     },
   };
