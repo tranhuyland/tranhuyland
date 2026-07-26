@@ -10,14 +10,12 @@ interface RelatedProductsProps {
 }
 
 export default function RelatedProducts({ currentItem, allItems }: RelatedProductsProps) {
-  // Lọc sản phẩm cùng Phường/Xã (loại trừ căn hiện tại đang xem)
   const relatedItems = allItems.filter((item) => {
     if (!item || !currentItem) return false;
     if (item.slug === currentItem.slug) return false; 
     return item.khuVuc === currentItem.khuVuc && item.khuVuc !== undefined;
-  }).slice(0, 6); // Lấy tối đa 6 căn để khách trượt xem
+  }).slice(0, 6);
 
-  // Ẩn khu vực nếu không có sản phẩm liên quan
   if (relatedItems.length === 0) return null;
 
   return (
@@ -34,7 +32,6 @@ export default function RelatedProducts({ currentItem, allItems }: RelatedProduc
         </Link>
       </div>
 
-      {/* Vùng chứa Slide Ngang (Scroll Snap) */}
       <div className="flex overflow-x-auto gap-4 pb-6 pt-2 px-1 snap-x snap-mandatory hide-scrollbar">
         {relatedItems.map((item, index) => {
           const thumbnail = layUrlAnhChuan(item.anh);
@@ -44,7 +41,6 @@ export default function RelatedProducts({ currentItem, allItems }: RelatedProduc
               key={index}
               className="group flex-none w-[200px] sm:w-[240px] bg-white rounded-[1.5rem] overflow-hidden shadow-sm hover:shadow-xl hover:shadow-orange-500/10 border border-slate-100 hover:border-orange-200 transition-all duration-300 transform hover:-translate-y-1 block snap-start"
             >
-              {/* Ảnh Thumbnail */}
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
                 <Image 
                   src={thumbnail} 
@@ -55,13 +51,11 @@ export default function RelatedProducts({ currentItem, allItems }: RelatedProduc
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
-                {/* Giá tiền nổi bật */}
                 <div className="absolute top-2 right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white font-extrabold text-xs px-2.5 py-1 rounded-lg shadow-md z-10 transform group-hover:scale-105 transition-transform">
                   {item.gia}
                 </div>
               </div>
               
-              {/* Thông tin Chi tiết gọn gàng */}
               <div className="p-3">
                 <div className="text-slate-500 text-[10px] font-semibold uppercase tracking-wider mb-1.5 flex items-center justify-between group-hover:text-orange-500 transition-colors">
                   <span className="flex items-center gap-1 truncate">
@@ -71,17 +65,15 @@ export default function RelatedProducts({ currentItem, allItems }: RelatedProduc
                   {item.dienTich && <span className="shrink-0 text-slate-500">{item.dienTich}</span>}
                 </div>
                 
-                {/* Đã chuyển thành thẻ H2 chuẩn theo SEO phân cấp thứ tự */}
-                <h2 className="text-slate-800 font-bold text-[13px] line-clamp-2 group-hover:text-orange-600 transition-colors leading-snug h-[2.8em]">
+                <h3 className="text-slate-800 font-bold text-[13px] line-clamp-2 group-hover:text-orange-600 transition-colors leading-snug h-[2.8em]">
                   {item.tieude}
-                </h2>
+                </h3>
               </div>
             </Link>
           );
         })}
       </div>
       
-      {/* CSS Nhúng để ẩn thanh cuộn (Scrollbar) mà vẫn cho phép vuốt */}
       <style dangerouslySetInnerHTML={{__html: `
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
