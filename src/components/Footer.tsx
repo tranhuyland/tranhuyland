@@ -24,23 +24,21 @@ export default function Footer() {
     <footer className="bg-slate-950 text-slate-400 text-xs mt-auto border-t border-slate-900">
       <div className="max-w-7xl mx-auto px-4 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         
-        {/* CỘT 1: THƯƠNG HIỆU */}
         <div>
           <div className="flex items-center gap-2.5 mb-5">
             <div className="relative h-10 w-10">
               <Image src="https://res.cloudinary.com/ds6k0kfbz/image/upload/v1782399841/n0v7ti6adzvy4sf9fhpn.avif" alt="Trần Huy Land" fill className="object-contain" />
             </div>
-            <h3 className="text-white font-extrabold text-base tracking-wide">TRẦN HUY LAND</h3>
+            <h2 className="text-white font-extrabold text-base tracking-wide">TRẦN HUY LAND</h2>
           </div>
           <p className="leading-relaxed">
             Chuyên nhận ký gửi môi giới nhà phố, đất nền, bất động sản thổ cư trung tâm thành phố Đà Nẵng.
           </p>
         </div>
 
-        {/* ĐÃ TỐI ƯU DOM: Loại bỏ div bọc ngoài cùng không cần thiết, đẩy thẳng grid con lên thẻ cha */}
         <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-4">
           <div>
-            <h4 className="text-white font-bold text-sm uppercase mb-5">ĐỊA BÀN KHẢO SÁT</h4>
+            <h3 className="text-white font-bold text-sm uppercase mb-5">ĐỊA BÀN KHẢO SÁT</h3>
             <ul className="space-y-3 text-sm">
               {topLocations.map((loc) => (
                 <li key={loc.slug}>
@@ -53,7 +51,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-bold text-sm uppercase mb-5">PHÂN KHÚC</h4>
+            <h3 className="text-white font-bold text-sm uppercase mb-5">PHÂN KHÚC</h3>
             <ul className="space-y-3 text-sm">
               {topTypes.map((type) => (
                 <li key={type.slug}>
@@ -66,9 +64,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* CỘT 4: THÔNG TIN VĂN PHÒNG */}
         <div>
-          <h4 className="text-white font-bold text-sm uppercase mb-5">LIÊN HỆ</h4>
+          <h3 className="text-white font-bold text-sm uppercase mb-5">LIÊN HỆ</h3>
           <ul className="space-y-3 text-sm">
             <li className="flex items-start gap-3">
               <MapPin className="w-5 h-5 text-orange-500 shrink-0" /> 

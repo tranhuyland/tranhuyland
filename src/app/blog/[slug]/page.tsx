@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Lấy ảnh bìa, nếu không có thì lấy logo mặc định để đảm bảo không bị lỗi ảnh trắng
   const imageUrl = blog.image && blog.image.startsWith('http')
     ? blog.image
-    : '/og-image.jpg';
+    : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630&q=80';
 
   const canonicalUrl = `/blog/${slug}`;
   const description = blog.excerpt || "Tư vấn và chia sẻ kinh nghiệm đầu tư bất động sản chuyên sâu tại Đà Nẵng.";
@@ -200,9 +200,9 @@ export default async function BlogDetailPage({ params }: Props) {
             <span className="bg-orange-500 text-white text-[11px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full mb-4 shadow-sm">
               Đồng hành cùng nhà đầu tư
             </span>
-            <h3 className="text-xl md:text-2xl font-extrabold mb-3 text-white">
+            <h2 className="text-xl md:text-2xl font-extrabold mb-3 text-white">
               Bạn cần tìm Bất động sản thực tế khớp với tiêu chí này?
-            </h3>
+            </h2>
             <p className="text-slate-300 text-sm md:text-base mb-8 leading-relaxed">
               Trần Huy Land nắm giữ giỏ hàng hơn 500+ sản phẩm chính chủ tại Hải Châu, Cẩm Lệ và rải rác đắc địa khắp Đà Nẵng. Minh bạch pháp lý, làm việc trực tiếp giá gốc.
             </p>

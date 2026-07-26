@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -71,7 +69,6 @@ export default function BdsCard({ item, rank, isFavorite, onToggleFavorite }: Bd
     }
   };
 
-  // 🚀 CHỐT CHẶN BẤM LINK: Ghi nhận chính xác tọa độ Y trước khi trình duyệt chuyển trang
   const handleLinkClick = () => {
     sessionStorage.setItem("thl_scroll_pos", window.scrollY.toString());
     document.documentElement.style.setProperty('scroll-behavior', 'auto', 'important'); 
@@ -86,7 +83,6 @@ export default function BdsCard({ item, rank, isFavorite, onToggleFavorite }: Bd
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
         <div className="absolute top-2 left-0 flex flex-col items-start gap-1.5 z-10">
-          {/* 🔥 BÙA CHÚ CHỐNG HYDRATION MISMATCH #418 CHO TEM ĐỎ */}
           <span className="bg-[#E03C31] text-white text-[11px] font-bold px-2.5 py-1 rounded-r shadow-sm tracking-wider" suppressHydrationWarning>
             {rankBadgeText}
           </span>
@@ -109,9 +105,9 @@ export default function BdsCard({ item, rank, isFavorite, onToggleFavorite }: Bd
       <div className="p-4 flex flex-col flex-grow justify-between">
         <div>
           <Link href={`/nha-dat/${item?.slug || ''}`} onClick={handleLinkClick} className="block">
-            <h2 className="text-[#2C2C2C] font-bold text-[14px] sm:text-[15px] uppercase line-clamp-2 leading-snug mb-3 group-hover:text-orange-600 transition-colors duration-300 h-[2.6rem] sm:h-[2.8rem]">
+            <h3 className="text-[#2C2C2C] font-bold text-[14px] sm:text-[15px] uppercase line-clamp-2 leading-snug mb-3 group-hover:text-orange-600 transition-colors duration-300 h-[2.6rem] sm:h-[2.8rem]">
               {item?.tieude}
-            </h2>
+            </h3>
           </Link>
 
           <div className="flex flex-wrap items-center text-[14px] text-[#505050] mb-3 gap-x-2 gap-y-1">

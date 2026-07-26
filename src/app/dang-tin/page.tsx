@@ -255,7 +255,7 @@ export default function DangTinPage() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-3xl border border-slate-100 shadow-xl p-8 text-center">
           <div className="w-16 h-16 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">🔒</div>
-          <h2 className="text-2xl font-black text-slate-900 mb-2 uppercase">Khu vực bảo mật</h2>
+          <h1 className="text-2xl font-black text-slate-900 mb-2 uppercase">Khu vực bảo mật</h1>
           <p className="text-sm font-bold text-slate-500 mb-8">Vui lòng nhập mật khẩu nội bộ.</p>
           <form onSubmit={handleLogin} className="space-y-4">
             <input type="password" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} placeholder="Nhập mật khẩu..." className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-center text-[16px] font-bold focus:outline-none focus:border-amber-500 text-slate-700" />

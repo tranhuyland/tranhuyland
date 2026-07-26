@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
       images: [
         {
-          url: "/og-image.jpg",
+          url: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630&q=80",
           width: 1200,
           height: 630,
           alt: `${action} ${exactName} Đà Nẵng`,
@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: titleText,
       description: descriptionText,
-      images: ["/og-image.jpg"],
+      images: ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630&q=80"],
     },
   };
 }

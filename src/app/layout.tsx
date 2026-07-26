@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 
 const SITE_URL = "https://tranhuyland.vn";
 const SITE_NAME = "Trần Huy Land";
-const DEFAULT_OG_IMAGE = "/og-image.jpg";
+const DEFAULT_OG_IMAGE = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630&q=80";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

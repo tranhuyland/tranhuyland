@@ -298,7 +298,7 @@ export default function DangBlogPage() {
           <div className="flex items-center gap-2.5">
             <div className="p-2 bg-orange-500 rounded-xl text-white"><FileText size={18} /></div>
             <div>
-              <h2 className="font-black text-sm md:text-base tracking-tight uppercase">Hệ thống Đăng Blog</h2>
+              <h1 className="font-black text-sm md:text-base tracking-tight uppercase">Hệ thống Đăng Blog</h1>
               <p className="text-[10px] text-orange-400 font-bold tracking-wider uppercase">Hệ thống Trần Huy Land CMS</p>
             </div>
           </div>
@@ -316,7 +316,7 @@ export default function DangBlogPage() {
 
         <form onSubmit={handleSubmitBlog} className="space-y-6 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm">
           <div className="border-b border-slate-100 pb-4 mb-2">
-            <h3 className="text-lg font-black text-slate-900">Biên tập nội dung Blog mới</h3>
+            <h2 className="text-lg font-black text-slate-900">Biên tập nội dung Blog mới</h2>
             <p className="text-xs text-slate-400">Điền chuẩn thông tin bên dưới để bọ Google lập chỉ mục tốt nhất.</p>
           </div>
 
@@ -459,7 +459,7 @@ export default function DangBlogPage() {
               value={formData.content}
               onChange={handleInputChange}
               onPaste={handleContentPaste}
-              placeholder="Soạn thảo tại đây...&#10;&#10;💡 MẸO CHÈN ẢNH:&#10;1. Nhấp con trỏ chuột vào sau bất kỳ đoạn văn nào anh muốn ảnh xuất hiện.&#10;2. Bấm nút [📸 Chèn ảnh vào con trỏ] màu cam ở thanh công cụ ngay phía trên.&#10;3. Máy sẽ tự úp và chèn đoạn mã: ![Ảnh minh họa](link-anh) vào đúng vị trí đó!"
+              placeholder="Soạn thảo tại here...&#10;&#10;💡 MẸO CHÈN ẢNH:&#10;1. Nhấp con trỏ chuột vào sau bất kỳ đoạn văn nào anh muốn ảnh xuất hiện.&#10;2. Bấm nút [📸 Chèn ảnh vào con trỏ] màu cam ở thanh công cụ ngay phía trên.&#10;3. Máy sẽ tự úp và chèn đoạn mã: ![Ảnh minh họa](link-anh) vào đúng vị trí đó!"
               className="w-full px-4 py-3.5 bg-slate-50 border-x border-b border-slate-300 focus:bg-white focus:border-orange-500 font-medium text-slate-800 rounded-b-xl text-[16px] md:text-sm outline-none leading-relaxed whitespace-pre-wrap font-sans shadow-inner"
             />
           </div>
