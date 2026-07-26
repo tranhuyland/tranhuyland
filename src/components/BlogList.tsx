@@ -173,7 +173,7 @@ export default function BlogList({ allBlogItems = [] }: BlogListProps) {
                   <span className="text-xs text-slate-400 font-bold mb-2 block">📅 {currentDate}</span>
                   <Link href={`/blog/${currentSlug}`} className="flex-1 flex flex-col justify-between">
                     <div>
-                      <h3 className="text-base font-black text-slate-800 line-clamp-2 group-hover:text-orange-600 mb-2.5 leading-snug">{currentTitle}</h3>
+                      <h2 className="text-base font-black text-slate-800 line-clamp-2 group-hover:text-orange-600 mb-2.5 leading-snug">{currentTitle}</h2>
                       <p className="text-slate-500 text-sm line-clamp-3 leading-relaxed">{currentExcerpt}</p>
                     </div>
                     <div className="pt-4 mt-4 border-t border-slate-50 flex items-center text-orange-500 font-bold text-xs gap-1">
