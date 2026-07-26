@@ -324,13 +324,12 @@ export default function PropertyClient({ item, initialCoverImage }: PropertyClie
         )}
 
         <div className="w-full pt-2">
-          <h4 className="font-extrabold text-slate-900 text-lg mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
+          <h2 className="font-extrabold text-slate-900 text-lg mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
             Mô tả chi tiết
-          </h4>
+          </h2>
           <div className="prose prose-slate max-w-none text-[#222222] text-[15px] sm:text-[16px] leading-[1.65] whitespace-pre-line text-justify">
             <ReactMarkdown
               components={{
-                h1: ({node, ...props}) => <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 mt-6 mb-3" {...props} />,
                 h2: ({node, ...props}) => <h2 className="text-base sm:text-lg font-bold text-slate-900 mt-6 mb-2" {...props} />,
                 h3: ({node, ...props}) => <h3 className="text-[15px] sm:text-base font-bold text-orange-600 mt-4 mb-2" {...props} />,
                 p: ({node, ...props}) => <p className="mb-3.5 last:mb-0" {...props} />,
