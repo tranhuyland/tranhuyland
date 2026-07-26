@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'; 
 import ReactDOM from 'react-dom'; // 🌟 Vũ khí kích hoạt nạp trước LCP
 import { getBdsData } from "@/lib/googleSheets";
 import Header from "@/components/Header";
@@ -11,31 +10,10 @@ import Footer from "@/components/Footer";
 import FloatingWidgets from "@/components/FloatingWidgets";
 
 
-export const revalidate = 60; 
-
-export const metadata: Metadata = {
-  title: 'Trần Huy Land - Kênh thông tin bất động sản uy tín',
-  description: 'Trần Huy Land - Chuyên cung cấp thông tin mua bán, cho thuê nhà đất, căn hộ uy tín và minh bạch tại Đà Nẵng.',
-  openGraph: {
-    title: 'Trần Huy Land - Kênh thông tin bất động sản',
-    description: 'Chuyên cung cấp thông tin mua bán, cho thuê nhà đất, căn hộ uy tín và nhanh chóng.',
-    url: 'https://tranhuyland.vn',
-    siteName: 'Trần Huy Land',
-    images: [
-      {
-        url: 'https://tranhuyland.vn/logo.png?v=1', 
-        width: 1200,
-        height: 630,
-        alt: 'Trần Huy Land - Bất Động Sản',
-      }
-    ],
-    locale: 'vi_VN',
-    type: 'website',
-  },
-};
+export const revalidate = 60;
 
 export default async function Home() {
-  // 🚀 BÙA CHÚ CHÍ MẠNG TRIỆT TIÊU 360ms ĐỢI TẢI:
+  // 🚀 BÙA CHÚ CHÍ MẠNG TRIỆU TIÊU 360ms ĐỢI TẢI:
   // Ra lệnh trình duyệt lập tức kéo tấm ảnh Hero ngay ở mili-giây thứ 10
   ReactDOM.preload('/hero-bg.jpg', { as: 'image', fetchPriority: 'high' });
 
