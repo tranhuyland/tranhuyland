@@ -19,45 +19,8 @@ export default async function Home() {
 
   const initialData = await getBdsData();
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "RealEstateAgent",
-    "name": "Trần Huy Land",
-    "image": "https://tranhuyland.vn/logo.png", 
-    "@id": "https://tranhuyland.vn",
-    "url": "https://tranhuyland.vn",
-    "telephone": "0905778852", 
-    "priceRange": "$$", 
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Hải Châu", 
-      "addressLocality": "Đà Nẵng",
-      "addressRegion": "Đà Nẵng",
-      "postalCode": "550000", 
-      "addressCountry": "VN"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 16.0544, 
-      "longitude": 108.2022
-    },
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-        "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
-      ],
-      "opens": "07:30", 
-      "closes": "21:30" 
-    }
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
       <Header />
       <Hero />
       <ListingSection allBdsItems={initialData} />
@@ -66,7 +29,6 @@ export default async function Home() {
       <ContactCTA />
       <Footer />
       <FloatingWidgets />
-      
     </>
   );
 }

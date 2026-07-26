@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import dynamic from "next/dynamic";
+import JsonLd from "@/components/JsonLd";
 import "./globals.css";
 
 const DynamicScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
@@ -102,6 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
 
       <body className={`${plusJakartaSans.className} antialiased min-h-screen flex flex-col pb-20 md:pb-0 bg-slate-50`} suppressHydrationWarning>
+        <JsonLd />
         {children}
         <DynamicScrollToTop />
       </body>
