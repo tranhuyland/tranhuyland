@@ -7,7 +7,7 @@ export default function NotFound() {
     <>
       <Header />
       <main className="flex flex-col items-center justify-center flex-1 text-center px-4 py-20">
-        <h2 className="text-4xl font-extrabold text-slate-900 mb-2">Căn nhà này không còn tồn tại</h2>
+        <h1 className="text-4xl font-extrabold text-slate-900 mb-2">Căn nhà này không còn tồn tại</h1>
         <p className="text-slate-500 mb-6 max-w-md">
           Có thể bất động sản này đã được bán hoặc chủ nhà đã dừng ký gửi. Hãy quay lại trang chủ để xem giỏ hàng mới nhất mỗi ngày.
         </p>
