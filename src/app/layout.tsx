@@ -12,16 +12,16 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
 });
 
+const SITE_URL = "https://tranhuyland.vn";
+const SITE_NAME = "Trần Huy Land";
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
   themeColor: "#ffffff",
 };
-
-const SITE_URL = "https://tranhuyland.vn";
-const SITE_NAME = "Trần Huy Land";
-const DEFAULT_OG_IMAGE = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630&q=80";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   ],
 
   alternates: {
-    canonical: "/",
+    canonical: SITE_URL,
   },
 
   robots: {
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
         url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Trần Huy Land",
+        alt: SITE_NAME,
       },
     ],
   },
@@ -91,18 +91,46 @@ export const metadata: Metadata = {
     images: [DEFAULT_OG_IMAGE],
   },
 };
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="vi" className={plusJakartaSans.variable} suppressHydrationWarning>
-      <head>
-        {/* 🚀 CHỐT CHẶN TRÌNH DUYỆT: Thi hành trước khi Body render 1 mili-giây */}
-        <script dangerouslySetInnerHTML={{ __html: `history.scrollRestoration = 'manual'` }} />
 
-        <link rel="preload" href="/_next/static/media/9e7b0a821b9dfcb4-s.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/_next/static/media/636a5ac981f94f8b-s.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="vi"
+      className={plusJakartaSans.variable}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* 🚀 Chặn trình duyệt tự khôi phục vị trí cuộn */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `history.scrollRestoration = 'manual'`,
+          }}
+        />
+
+        <link
+          rel="preload"
+          href="/_next/static/media/9e7b0a821b9dfcb4-s.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/_next/static/media/636a5ac981f94f8b-s.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
       </head>
 
-      <body className={`${plusJakartaSans.className} antialiased min-h-screen flex flex-col pb-20 md:pb-0 bg-slate-50`} suppressHydrationWarning>
+      <body
+        className={`${plusJakartaSans.className} antialiased min-h-screen flex flex-col pb-20 md:pb-0 bg-slate-50`}
+        suppressHydrationWarning
+      >
         <JsonLd />
         {children}
         <DynamicScrollToTop />
