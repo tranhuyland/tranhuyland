@@ -4,23 +4,30 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        // 1. Cấu hình cho tất cả các công cụ tìm kiếm chính thống (Google, Bing, Yahoo...)
+        // Áp dụng cho toàn bộ bot tìm kiếm chính thống (Google, Bing, Yahoo...)
         userAgent: '*',
         allow: [
           '/',
-          '/_next/static/', // Cho phép bọ quét các file giao diện tĩnh (CSS, JS) để hiển thị đúng cấu trúc web
-          '/_next/image',  // 🔥 QUAN TRỌNG: Mở cửa cho Googlebot vào cào và tối ưu chỉ mục hình ảnh BĐS
+          // Cho phép bọ quét CSS/JS tĩnh để render đúng cấu trúc trang
+          '/_next/static/',
+          // Ưu tiên hơn /*?* (theo nguyên tắc longest-match của Google) nên ảnh tối ưu vẫn được index
+          '/_next/image',
         ],
         disallow: [
-          '/api/',       // Chặn quét các route API nội bộ để bảo mật dữ liệu hệ thống
-          '/*?*',        // Chặn các URL lọc/tìm kiếm có query string để tránh Duplicate Content (nhưng không ảnh hưởng đến ảnh nhờ lệnh allow ở trên)
+          // Chặn route API nội bộ
+          '/api/',
+          // Chặn trang form đăng tin / đăng blog — không mang giá trị nội dung SEO
+          '/dang-tin',
+          '/dang-blog',
+          // Chặn URL chứa query string (bộ lọc, sắp xếp) để tránh Duplicate Content
+          '/*?*',
         ],
       },
       {
-        // 2. Chặn hoàn toàn các AI Bot thu thập dữ liệu bất động sản của anh trái phép
+        // Chặn hoàn toàn các AI Bot thu thập dữ liệu trái phép
         userAgent: ['GPTBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-Web', 'CCBot'],
         disallow: '/',
-      }
+      },
     ],
     sitemap: 'https://tranhuyland.vn/sitemap.xml',
   };
