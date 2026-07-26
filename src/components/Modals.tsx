@@ -3,19 +3,16 @@ import React, { useState, useEffect } from "react";
 import { X, PenTool, Copy } from "lucide-react";
 
 export function Modals() {
-  // Tự quản lý trạng thái đóng/mở bên trong component
   const [isOpen, setIsOpen] = useState(false);
   const [kgTen, setKgTen] = useState("");
   const [kgDiaChi, setKgDiaChi] = useState("");
   const [kgGia, setKgGia] = useState("");
 
-  // Lắng nghe sự kiện từ Hero.tsx
   useEffect(() => {
     const handleOpen = () => setIsOpen(true);
     
     window.addEventListener('open-ky-goi-modal', handleOpen);
     
-    // Dọn dẹp event khi component unmount
     return () => {
       window.removeEventListener('open-ky-goi-modal', handleOpen);
     };
@@ -28,21 +25,15 @@ export function Modals() {
   const handleKyGuiSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Nội dung mẫu chuyên nghiệp
     const msg = `--- 📋 KÝ GỬI NHÀ ĐẤT ---\n- Liên hệ: ${kgTen}\n- Địa chỉ: ${kgDiaChi}\n- Giá mong muốn: ${kgGia || "Thương lượng"}\n-------------------------\nNhờ anh Huy xem giúp ạ!`;
     
-    // Sao chép tự động vào bộ nhớ tạm
     navigator.clipboard.writeText(msg).then(() => {
-      // Thông báo cho khách biết đã copy thành công
       alert("✅ Đã sao chép nội dung! \n\nBây giờ Zalo anh Huy sẽ mở ra, bạn chỉ cần chọn khung chat và bấm DÁN (Paste) để gửi nhé.");
       
-      // Mở Zalo
       window.open("https://zalo.me/0905778852", "_blank");
       onClose();
-      // Reset form sau khi gửi
       setKgTen(""); setKgDiaChi(""); setKgGia("");
     }).catch(() => {
-      // Nếu copy lỗi, vẫn mở Zalo để khách tự gõ
       window.open("https://zalo.me/0905778852", "_blank");
       onClose();
     });
@@ -55,9 +46,9 @@ export function Modals() {
           <X className="w-5 h-5" />
         </button>
         
-        <h3 className="font-black text-slate-900 text-lg mb-1 flex items-center gap-2">
+        <h2 className="font-black text-slate-900 text-lg mb-1 flex items-center gap-2">
           <PenTool className="text-orange-500 w-5 h-5" /> Ký Gửi Nhanh
-        </h3>
+        </h2>
         <p className="text-xs text-slate-400 mb-5">
           Điền thông tin, hệ thống sẽ tự soạn tin nhắn gửi qua Zalo cho anh Huy.
         </p>

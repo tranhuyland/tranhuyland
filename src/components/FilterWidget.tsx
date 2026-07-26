@@ -59,12 +59,10 @@ export default function FilterWidget({
 
   return (
     <>
-      {/* 1. GIAO DIỆN HIỂN THỊ TRÊN MÁY TÍNH (Nằm ngang cực đẹp) */}
       <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Fields />
       </div>
 
-      {/* 2. GIAO DIỆN DRAWER TRƯỢT LÊN TRÊN ĐIỆN THOẠI */}
       {isDrawerOpen && (
         <div className="fixed inset-0 z-[60] md:hidden flex flex-col justify-end">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={closeDrawer} />
@@ -72,7 +70,7 @@ export default function FilterWidget({
             <div className="flex items-center justify-between border-b border-slate-100 p-5 shrink-0">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal size={18} className="text-orange-500" />
-                <h4 className="font-extrabold text-slate-800 text-base">Bộ lọc nâng cao</h4>
+                <h2 className="font-extrabold text-slate-800 text-base">Bộ lọc nâng cao</h2>
               </div>
               <button onClick={closeDrawer} className="text-slate-400 p-2"><X size={22} /></button>
             </div>
