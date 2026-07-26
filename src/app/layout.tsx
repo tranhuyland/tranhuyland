@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import dynamic from "next/dynamic";
+import JsonLd from "@/components/JsonLd";
 import "./globals.css";
 
 const DynamicScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
@@ -18,10 +19,17 @@ export const viewport: Viewport = {
   themeColor: "#ffffff",
 };
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://tranhuyland.vn"),
+const SITE_URL = "https://tranhuyland.vn";
+const SITE_NAME = "Trần Huy Land";
+const DEFAULT_OG_IMAGE = "/og-image.jpg";
 
-  title: "Trần Huy Land | Kho Nhà Đất Chính Chủ Hải Châu Cẩm Lệ Đà Nẵng",
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+
+  title: {
+    default: "Trần Huy Land | Kho Nhà Đất Chính Chủ Hải Châu Cẩm Lệ Đà Nẵng",
+    template: "%s | Trần Huy Land",
+  },
 
   description:
     "Mua bán, ký gửi nhà đất chính chủ uy tín tại Hải Châu, Cẩm Lệ, Đà Nẵng. Cập nhật giỏ hàng thực tế mỗi ngày: Nhà mặt tiền Cẩm Bá Thước, nhà kiệt ô tô Cách Mạng Tháng 8. Pháp lý minh bạch, có sẵn sổ đỏ bản vẽ xem ngay.",
@@ -36,7 +44,7 @@ export const metadata: Metadata = {
   ],
 
   alternates: {
-    canonical: "https://tranhuyland.vn",
+    canonical: "/",
   },
 
   robots: {
@@ -60,14 +68,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "vi_VN",
-    url: "https://tranhuyland.vn",
-    siteName: "Trần Huy Land",
+    url: SITE_URL,
+    siteName: SITE_NAME,
     title: "Trần Huy Land | Kho Nhà Đất Chính Chủ Hải Châu Cẩm Lệ Đà Nẵng",
     description:
       "Mua bán, ký gửi nhà đất chính chủ uy tín tại Đà Nẵng. Cập nhật nhà đất thực tế mỗi ngày.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: DEFAULT_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Trần Huy Land",
@@ -77,10 +85,10 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Trần Huy Land",
+    title: "Trần Huy Land | Kho Nhà Đất Chính Chủ Đà Nẵng",
     description:
       "Kho nhà đất chính chủ Đà Nẵng cập nhật mỗi ngày.",
-    images: ["/og-image.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -95,6 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
 
       <body className={`${plusJakartaSans.className} antialiased min-h-screen flex flex-col pb-20 md:pb-0 bg-slate-50`} suppressHydrationWarning>
+        <JsonLd />
         {children}
         <DynamicScrollToTop />
       </body>

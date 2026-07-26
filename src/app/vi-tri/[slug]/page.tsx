@@ -29,18 +29,49 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const exactName = LOCATION_MAP[slug] || slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-  
-  const titleText = `Mua bán nhà đất ${exactName}, Đà Nẵng giá tốt nhất | Trần Huy Land`;
+
+  const titleText = `Mua bán nhà đất ${exactName}, Đà Nẵng giá tốt nhất`;
   const descriptionText = `Danh sách bất động sản, nhà đất chính chủ tại khu vực ${exactName}, Đà Nẵng. Cập nhật mới nhất hôm nay, giá rẻ, vị trí đẹp, thông tin minh bạch.`;
+  const canonicalUrl = `/vi-tri/${slug}`;
 
   return {
     title: titleText,
     description: descriptionText,
+    keywords: [
+      `nhà đất ${exactName}`,
+      `mua bán nhà ${exactName}`,
+      `bán đất ${exactName} đà nẵng`,
+      `bất động sản ${exactName}`,
+      "nhà đất đà nẵng",
+      "trần huy land",
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
     openGraph: {
       title: titleText,
       description: descriptionText,
+      url: canonicalUrl,
       siteName: "Trần Huy Land",
       type: "website",
+      images: [
+        {
+          url: "/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: `Nhà đất ${exactName}, Đà Nẵng`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: titleText,
+      description: descriptionText,
+      images: ["/og-image.jpg"],
     },
   };
 }

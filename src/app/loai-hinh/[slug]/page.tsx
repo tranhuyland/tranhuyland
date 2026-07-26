@@ -28,13 +28,49 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const exactName = TYPE_MAP[slug] || "Bất động sản";
   const action = slug === "cho-thue" ? "Cho thuê" : "Mua bán";
 
+  const titleText = `${action} ${exactName} Đà Nẵng chính chủ, giá tốt nhất`;
+  const descriptionText = `Khám phá giỏ hàng ${exactName.toLowerCase()} tại Đà Nẵng. Cập nhật liên tục, vị trí đẹp, pháp lý rõ ràng, thông tin minh bạch từ Trần Huy Land.`;
+  const canonicalUrl = `/loai-hinh/${slug}`;
+
   return {
-    title: `${action} ${exactName} Đà Nẵng chính chủ, giá tốt nhất | Trần Huy Land`,
-    description: `Khám phá giỏ hàng ${exactName.toLowerCase()} tại Đà Nẵng. Cập nhật liên tục, vị trí đẹp, pháp lý rõ ràng, thông tin minh bạch từ Trần Huy Land.`,
+    title: titleText,
+    description: descriptionText,
+    keywords: [
+      `${action} ${exactName.toLowerCase()} đà nẵng`,
+      `${exactName.toLowerCase()} chính chủ`,
+      `${exactName.toLowerCase()} giá tốt`,
+      `mua ${exactName.toLowerCase()} đà nẵng`,
+      "bất động sản đà nẵng",
+      "trần huy land",
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
     openGraph: {
-      title: `${action} ${exactName} Đà Nẵng | Trần Huy Land`,
-      description: `Khám phá các sản phẩm ${exactName.toLowerCase()} giá tốt nhất tại Đà Nẵng. Liên hệ Trần Huy Land ngay!`,
-    }
+      title: titleText,
+      description: descriptionText,
+      url: canonicalUrl,
+      siteName: "Trần Huy Land",
+      type: "website",
+      images: [
+        {
+          url: "/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: `${action} ${exactName} Đà Nẵng`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: titleText,
+      description: descriptionText,
+      images: ["/og-image.jpg"],
+    },
   };
 }
 

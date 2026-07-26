@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { BookOpen } from "lucide-react";
 import { getBlogData } from "@/lib/googleSheets";
 import Header from "@/components/Header";
@@ -9,11 +10,18 @@ import BlogList from "@/components/BlogList";
 export const revalidate = 60;
 
 // 🌐 VŨ KHÍ SEO META ĐẦY ĐỦ CHO GOOGLE & ZALO
-export const metadata = {
-  title: "Góc Tư Vấn Bất Động Sản Đà Nẵng | Trần Huy Land",
+export const metadata: Metadata = {
+  title: "Góc Tư Vấn Bất Động Sản Đà Nẵng",
   description: "Chuyên mục chia sẻ kinh nghiệm mua bán nhà đất, thủ tục pháp lý, sổ đỏ và phân tích thị trường bất động sản thực tế tại Đà Nẵng.",
+  keywords: [
+    "tư vấn bất động sản đà nẵng",
+    "kinh nghiệm mua nhà đất",
+    "pháp lý sổ đỏ",
+    "thị trường bất động sản đà nẵng",
+    "kiến thức đầu tư nhà đất",
+  ],
   alternates: {
-    canonical: "https://tranhuyland.vn/blog",
+    canonical: "/blog",
   },
   robots: {
     index: true,
@@ -22,17 +30,23 @@ export const metadata = {
   openGraph: {
     title: "Góc Tư Vấn Bất Động Sản Đà Nẵng | Trần Huy Land",
     description: "Chuyên mục chia sẻ kinh nghiệm mua bán nhà đất thực tế tại Đà Nẵng.",
-    url: "https://tranhuyland.vn/blog",
+    url: "/blog",
     siteName: "Trần Huy Land",
     type: "website",
     images: [
       {
-        url: "https://tranhuyland.vn/banner-blog-seo.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Góc tư vấn kiến thức nhà đất Trần Huy Land",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Góc Tư Vấn Bất Động Sản Đà Nẵng | Trần Huy Land",
+    description: "Chuyên mục chia sẻ kinh nghiệm mua bán nhà đất thực tế tại Đà Nẵng.",
+    images: ["/og-image.jpg"],
   },
 };
 
