@@ -2,7 +2,7 @@ import React from "react";
 
 const SITE_URL = "https://tranhuyland.vn";
 const SITE_NAME = "Trần Huy Land";
-const LOGO_URL = `${SITE_URL}/icon.png`;
+const LOGO_URL = `${SITE_URL}/icon.svg`;
 const PHONE = "0905778852";
 
 const graph = {

@@ -17,7 +17,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 const SITE_URL = "https://tranhuyland.vn";
 const SITE_NAME = "Trần Huy Land";
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
+const DEFAULT_OG_IMAGE = "https://res.cloudinary.com/ds6k0kfbz/image/upload/v1782399841/n0v7ti6adzvy4sf9fhpn.avif";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -63,9 +63,9 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/icon.png",
-    shortcut: "/icon.png",
-    apple: "/apple-touch-icon.png",
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
   },
 
   openGraph: {
@@ -115,7 +115,7 @@ export default function RootLayout({
 
         <link
           rel="preload"
-          href="/hero-bg.jpg"
+          href="/hero-bg.svg"
           as="image"
           fetchPriority="high"
         />
