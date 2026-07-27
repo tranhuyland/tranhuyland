@@ -109,7 +109,7 @@ export async function getBdsData(): Promise<RealEstateItem[]> {
       const obj: any = {};
       
       headers.forEach((headerName, idx) => {
-        let value = rowData[idx] || "";
+        const value = rowData[idx] || "";
         obj[headerName] = value.replace(/^"|"$/g, '').trim();
       });
 
@@ -205,7 +205,7 @@ export async function getBlogData(): Promise<any[]> {
       const rowData = rows[i];
       const obj: any = {};
       headers.forEach((headerName, idx) => {
-        let value = rowData[idx] || "";
+        const value = rowData[idx] || "";
         obj[headerName] = value.replace(/^"|"$/g, '').trim();
       });
 
