@@ -1,4 +1,4 @@
-import { getBdsData } from "@/lib/googleSheets";
+import { getBdsData, getBlogData } from "@/lib/googleSheets";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWidgets from "@/components/FloatingWidgets";
@@ -31,7 +31,6 @@ function convertToSlug(text: string): string {
     .replace(/^-|-$/g, "");
 }
 
-// 🌟 RAM CACHE: Bọc riêng mảng tổng để React Request Memoization ghi nhớ, không bắt Server gọi API 2 lần
 const getCachedAllItems = cache(async () => {
   const data = await getBdsData();
   return Array.isArray(data) ? data : [];
@@ -115,7 +114,22 @@ export default async function NhaDatDetail({ params }: Props) {
   const locationSlug = convertToSlug(locationName);
   const imageSeo = layUrlAnhChuan(item.anh || item.Anh) || "";
 
-  // Chuẩn hóa gọt giá tiền thô sang con số thuần (ví dụ: "3.5 tỷ" -> 3500000000) để bọ Google hiểu
+  const loaiHinhText = (item.loaiHinh || item.phân_loại || item.loaihinh || "").toLowerCase();
+  let typeSlug = "";
+  let typeLabel = "";
+  if (loaiHinhText.includes("dat") || loaiHinhText.includes("đất")) { typeSlug = "dat"; typeLabel = "Đất"; }
+  else if (loaiHinhText.includes("nha pho") || loaiHinhText.includes("nhà phố") || loaiHinhText.includes("nha")) { typeSlug = "nha-pho"; typeLabel = "Nhà phố"; }
+  else if (loaiHinhText.includes("can ho") || loaiHinhText.includes("căn hộ")) { typeSlug = "can-ho"; typeLabel = "Căn hộ"; }
+  else if (loaiHinhText.includes("cho thue") || loaiHinhText.includes("cho thuê")) { typeSlug = "cho-thue"; typeLabel = "Cho thuê"; }
+
+  const allBlogs = await getBlogData();
+  const blogText = `${titleText} ${locationName}`.toLowerCase();
+  const relatedBlogs = allBlogs.filter((b: any) => {
+    const bTitle = (b.title || "").toLowerCase();
+    const bExcerpt = (b.excerpt || "").toLowerCase();
+    return locationName && (bTitle.includes(locationName.toLowerCase()) || bExcerpt.includes(locationName.toLowerCase()));
+  }).slice(0, 4);
+
   const rawPrice = item.gia || item.Gia || "0";
   let numericPrice = parseFloat(rawPrice.replace(/[^0-9.]/g, "")) || 0;
   if (rawPrice.toLowerCase().includes("tỷ") || rawPrice.toLowerCase().includes("ty")) {
@@ -124,7 +138,6 @@ export default async function NhaDatDetail({ params }: Props) {
     numericPrice = numericPrice * 1000000;
   }
 
-  // 🚀 VŨ KHÍ BẬC THẦY SEO: Cấu trúc Schema chuẩn Google Rich Results Test 2026
   const jsonLdSchema = {
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
@@ -161,7 +174,6 @@ export default async function NhaDatDetail({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-[#222222] selection:bg-orange-500 selection:text-white">
-      {/* Tiêm Schema siêu sạch vào thẻ head ảo của trang */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }}
@@ -183,6 +195,12 @@ export default async function NhaDatDetail({ params }: Props) {
             </>
           )}
           <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          {typeSlug && typeLabel && (
+            <Link href={`/loai-hinh/${typeSlug}`} className="hover:text-orange-600 font-semibold shrink-0">
+              {typeLabel}
+            </Link>
+          )}
+          <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           <span className="text-orange-600 font-bold truncate tracking-tight">
             {titleText}
           </span>
@@ -196,6 +214,23 @@ export default async function NhaDatDetail({ params }: Props) {
           <RelatedProducts currentItem={enrichedItem} allItems={allItems} />
         </div>
       </main>
+
+      <nav aria-label="Liên kết nội bộ" className="sr-only">
+        <h2>Liên kết liên quan</h2>
+        <ul>
+          {typeSlug && <li><Link href={`/loai-hinh/${typeSlug}`}>{typeLabel} Đà Nẵng</Link></li>}
+          <li><Link href={`/vi-tri/${locationSlug}`}>Nhà đất {locationName}</Link></li>
+          <li><Link href="/loai-hinh/dat">Mua bán đất Đà Nẵng</Link></li>
+          <li><Link href="/loai-hinh/nha-pho">Mua bán nhà phố Đà Nẵng</Link></li>
+          <li><Link href="/loai-hinh/can-ho">Mua bán căn hộ Đà Nẵng</Link></li>
+          <li><Link href="/blog">Góc tư vấn bất động sản Đà Nẵng</Link></li>
+          {relatedBlogs.map((b: any) => (
+            <li key={b.slug}>
+              <Link href={`/blog/${b.slug}`}>{b.title}</Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <BackButton />
       <Footer />
