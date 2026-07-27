@@ -10,7 +10,8 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <Image
           src="/hero-bg.jpg"
-          alt="Toàn cảnh Đà Nẵng"
+          alt="Toàn cảnh thành phố Đà Nẵng - Nhà đất Trần Huy Land"
+          title="Bất động sản Đà Nẵng"
           fill
           priority
           fetchPriority="high"
