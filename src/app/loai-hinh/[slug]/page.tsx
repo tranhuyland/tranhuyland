@@ -96,8 +96,49 @@ export default async function PropertyTypePage({ params }: Props) {
   const exactName = TYPE_MAP[slug] || "Bất động sản";
   const action = slug === "cho-thue" ? "Cho thuê" : "Mua bán";
 
+  const allData = await getBdsData();
+  const removeAccents = (str: string) => str.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").trim();
+  const typeItems = allData.filter((item: any) => {
+    const textToSearch = removeAccents(`${item.tieude || ""} ${item.tag || ""} ${item.loaiHinh || item.phân_loại || ""}`);
+    if (slug === "dat") return textToSearch.includes("dat");
+    if (slug === "nha-pho") return textToSearch.includes("nha pho");
+    if (slug === "can-ho") return textToSearch.includes("can ho");
+    if (slug === "cho-thue") return textToSearch.includes("cho thue");
+    return true;
+  }).slice(0, 20);
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "https://tranhuyland.vn/" },
+      { "@type": "ListItem", "position": 2, "name": "Loại hình", "item": "https://tranhuyland.vn/" },
+      { "@type": "ListItem", "position": 3, "name": `${action} ${exactName}`, "item": `https://tranhuyland.vn/loai-hinh/${slug}` },
+    ],
+  };
+
+  const collectionPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": `${action} ${exactName} Đà Nẵng chính chủ`,
+    "url": `https://tranhuyland.vn/loai-hinh/${slug}`,
+    "inLanguage": "vi-VN",
+    "isPartOf": { "@id": "https://tranhuyland.vn/#website" },
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": typeItems.map((item: any, idx: number) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "url": `https://tranhuyland.vn/nha-dat/${item.slug}`,
+        "name": item.tieude || "Bất động sản",
+      })),
+    },
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionPageSchema) }} />
       <Header />
 
       <nav className="sticky top-[56px] z-40 bg-white border-b border-slate-200 shadow-sm w-full">
