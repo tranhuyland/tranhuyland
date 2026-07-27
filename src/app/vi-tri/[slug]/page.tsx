@@ -1,4 +1,4 @@
-import { getBdsData } from "@/lib/googleSheets";
+import { getBdsData, getBlogData } from "@/lib/googleSheets";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWidgets from "@/components/FloatingWidgets";
@@ -8,7 +8,6 @@ import React from "react";
 import Link from "next/link";
 import { Home, ChevronRight } from "lucide-react";
 
-// 🚀 KÍCH HOẠT ISR CACHE
 export const revalidate = 60;
 
 const LOCATION_MAP: Record<string, string> = {
@@ -25,7 +24,6 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// 🌐 1. BƠM THẺ SEO ĐỘNG CHO GOOGLE (Đã khôi phục đầy đủ OpenGraph)
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const exactName = LOCATION_MAP[slug] || slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
@@ -81,11 +79,18 @@ export default async function LocationPage({ params }: Props) {
   const exactName = LOCATION_MAP[slug] || slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
   const allData = await getBdsData();
 
+  const allBlogs = await getBlogData();
+  const locationNameLower = exactName.toLowerCase();
+  const relatedBlogs = allBlogs.filter((b: any) => {
+    const bTitle = (b.title || "").toLowerCase();
+    const bExcerpt = (b.excerpt || "").toLowerCase();
+    return bTitle.includes(locationNameLower) || bExcerpt.includes(locationNameLower);
+  }).slice(0, 4);
+
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
       <Header />
 
-      {/* 🗺️ BREADCRUMB DÁN SÁT HEADER + CHỮ KHU VỰC MÀU CAM CỰC ĐẸP */}
       <nav className="sticky top-[56px] md:top-[64px] z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
         <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-slate-500 flex-nowrap overflow-hidden">
           
@@ -103,7 +108,6 @@ export default async function LocationPage({ params }: Props) {
           
           <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           
-          {/* 🔥 Tên khu vực bôi đậm (font-extrabold), màu cam (orange-600), cỡ chữ đồng bộ */}
           <span className="text-orange-600 font-extrabold min-w-0 flex-1 truncate text-[13px] sm:text-[14.5px] tracking-tight">
             {exactName}
           </span>
@@ -111,7 +115,6 @@ export default async function LocationPage({ params }: Props) {
         </div>
       </nav>
 
-      {/* KHỐI HERO: DÙNG !mt-0 VÀ pt-2 ĐỂ ÉP SÁT LÊN TRÊN */}
       <div className="pt-2 pb-12 bg-slate-900 text-center px-4 !mt-0">
         <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
           Nhà đất <span className="text-orange-500">{exactName}</span>, Đà Nẵng
@@ -124,6 +127,22 @@ export default async function LocationPage({ params }: Props) {
       <div className="flex-grow -mt-4">
         <ListingSection allBdsItems={allData} forceDistrict={exactName} />
       </div>
+
+      <nav aria-label="Liên kết nội bộ" className="sr-only">
+        <h2>Liên kết liên quan</h2>
+        <ul>
+          <li><Link href="/loai-hinh/dat">Mua bán đất {exactName}</Link></li>
+          <li><Link href="/loai-hinh/nha-pho">Mua bán nhà phố {exactName}</Link></li>
+          <li><Link href="/loai-hinh/can-ho">Mua bán căn hộ {exactName}</Link></li>
+          <li><Link href="/loai-hinh/cho-thue">Cho thuê bất động sản {exactName}</Link></li>
+          <li><Link href="/blog">Góc tư vấn bất động sản Đà Nẵng</Link></li>
+          {relatedBlogs.map((b: any) => (
+            <li key={b.slug}>
+              <Link href={`/blog/${b.slug}`}>{b.title}</Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <Footer />
       <FloatingWidgets />
