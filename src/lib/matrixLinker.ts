@@ -104,15 +104,37 @@ const MATRIX_RULES: MatrixRule[] = [
   }
 ];
 
+// 🏷️ TỪ ĐIỂN MA TRẬN LOẠI HÌNH BẤT ĐỘNG SẢN (Mở rộng Internal Linking)
+const TYPE_MATRIX_RULES: MatrixRule[] = [
+  {
+    keywords: ['đất', 'đất nền', 'đất trống', 'đất thổ cư', 'mua đất', 'bán đất', 'lô đất', 'thửa đất', 'đất xây nhà'],
+    targetUrl: '/loai-hinh/dat'
+  },
+  {
+    keywords: ['nhà phố', 'nhà mặt tiền', 'nhà cấp 4', 'nhà cấp 4 mặt tiền', 'nhà 1 trệt 1 lầu', 'nhà 2 tầng', 'nhà 3 tầng', 'nhà hẻm', 'nhà kiệt', 'nhà ngõ', 'mua nhà', 'bán nhà'],
+    targetUrl: '/loai-hinh/nha-pho'
+  },
+  {
+    keywords: ['căn hộ', 'căn hộ chung cư', 'chung cư', 'căn hộ cao cấp', 'căn hộ dịch vụ', 'condo', 'apartment'],
+    targetUrl: '/loai-hinh/can-ho'
+  },
+  {
+    keywords: ['cho thuê', 'thuê nhà', 'thuê đất', 'thuê mặt bằng', 'thuê văn phòng', 'nhà cho thuê', 'đất cho thuê'],
+    targetUrl: '/loai-hinh/cho-thue'
+  }
+];
+
 // 🚀 ĐỘNG CƠ GÀI LINK MA TRẬN THÔNG MINH
 export function tuDongGaiLinkMaTran(rawText?: string): string {
   if (!rawText) return '';
 
   let processedText = rawText;
 
+  const allRules = [...MATRIX_RULES, ...TYPE_MATRIX_RULES];
+
   // 1. Băm phẳng từ điển & Sắp xếp theo độ dài GIẢM DẦN (Cụm dài như 'Hòa Cường Bắc' phải gài trước cụm 'Hòa Cường')
   const flattenedKeywords: { phrase: string; url: string }[] = [];
-  MATRIX_RULES.forEach(rule => {
+  allRules.forEach(rule => {
     rule.keywords.forEach(phrase => {
       flattenedKeywords.push({ phrase: phrase.trim(), url: rule.targetUrl });
     });

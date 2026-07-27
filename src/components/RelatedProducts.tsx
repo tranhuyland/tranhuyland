@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, ChevronRight, Compass } from 'lucide-react';
 import { layUrlAnhChuan } from '@/lib/utils';
+import { convertToSlug } from '@/lib/googleSheets';
 
 interface RelatedProductsProps {
   currentItem: any;
@@ -27,7 +28,7 @@ export default function RelatedProducts({ currentItem, allItems }: RelatedProduc
            </h2>
            <p className="text-sm text-slate-500 mt-1">Các bất động sản có thể bạn quan tâm</p>
         </div>
-        <Link href="/" className="text-orange-600 text-sm font-bold flex items-center gap-1 hover:text-orange-700 transition-colors bg-orange-50 px-3 py-1.5 rounded-full">
+        <Link href={`/vi-tri/${convertToSlug(currentItem.khuVuc || '')}`} className="text-orange-600 text-sm font-bold flex items-center gap-1 hover:text-orange-700 transition-colors bg-orange-50 px-3 py-1.5 rounded-full">
           Xem thêm <ChevronRight size={14} />
         </Link>
       </div>
