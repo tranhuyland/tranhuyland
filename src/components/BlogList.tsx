@@ -81,7 +81,7 @@ export default function BlogList({ allBlogItems = [] }: BlogListProps) {
 
   const savedCount = actualSavedBlogs.length; // <--- Con số luôn luôn chính xác tuyệt đối!
 
-  // 🚀 TỐI ƯU 3: THUẬT TOÁN LỌC KÉP KHÁNG LỖI CHỮ HOA/THƯƠNG
+  // 🚀 TỐI ƯU 3: THUẬT TOÁN LỌC KÉP KHÁNG LỖI CHỮ HOA/THƯỜNG
   const filteredBlogs = useMemo(() => {
     if (activeTab === "all") return safeBlogs;
     if (activeTab === "saved") return actualSavedBlogs; // Tái sử dụng mảng trên, tiết kiệm RAM!
@@ -150,7 +150,7 @@ export default function BlogList({ allBlogItems = [] }: BlogListProps) {
                 {/* PHẦN 1: KHỐI ẢNH (Bấm vào ảnh nhảy trang) */}
                 <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden">
                   <Link href={`/blog/${currentSlug}`} className="absolute inset-0 z-0">
-                    <Image src={currentImage} alt={currentTitle} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 1280px) 100vw" />
+                    <Image src={currentImage} alt={`Ảnh bài viết: ${currentTitle}`} title={currentTitle} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw" loading="lazy" />
                   </Link>
 
                   <span className="absolute top-4 left-4 bg-white/95 backdrop-blur-xs text-orange-600 font-extrabold text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-xl shadow-xs border border-orange-100 z-10 pointer-events-none">

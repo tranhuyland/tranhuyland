@@ -44,10 +44,12 @@ export default function RelatedProducts({ currentItem, allItems }: RelatedProduc
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
                 <Image 
                   src={thumbnail} 
-                  alt={item.tieude || "Bất động sản Trần Huy Land"} 
+                  alt={`Bất động sản cùng khu vực: ${item.tieude || "Trần Huy Land"}`} 
+                  title={item.tieude || "Trần Huy Land"}
                   fill 
                   className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out" 
                   sizes="(max-width: 768px) 50vw, 25vw"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
