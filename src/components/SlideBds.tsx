@@ -19,7 +19,7 @@ interface PropertyGalleryProps {
   linkMap?: string; 
   maNhungMap?: string; 
   toaDo?: string;
-  initialCoverImage?: string; // ⚡ ĐÃ KHÔI PHỤC ĐỂ KHỚP VỚI PROPERTYCLIENT
+  initialCoverImage?: string;
 }
 
 export default function SlideBds({ 
@@ -150,7 +150,8 @@ export default function SlideBds({
                   priority={idx === 0}
                   fetchPriority={idx === 0 ? "high" : "auto"}
                   loading={idx === 0 ? "eager" : "lazy"}
-                  sizes="(max-width: 768px) 100vw, 800px" 
+                  decoding="async"
+                  sizes="(max-width: 768px) 100vw, 800px"
                   className="object-cover" 
                 />
               </div>
