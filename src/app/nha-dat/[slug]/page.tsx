@@ -166,6 +166,17 @@ export default async function NhaDatDetail({ params }: Props) {
     }
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "https://tranhuyland.vn/" },
+      ...(locationName ? [{ "@type": "ListItem", "position": 2, "name": `Nhà đất ${locationName}`, "item": `https://tranhuyland.vn/vi-tri/${locationSlug}` }] : []),
+      ...(typeSlug && typeLabel ? [{ "@type": "ListItem", "position": locationName ? 3 : 2, "name": typeLabel, "item": `https://tranhuyland.vn/loai-hinh/${typeSlug}` }] : []),
+      { "@type": "ListItem", "position": (locationName ? 3 : 2) + (typeSlug ? 1 : 0), "name": titleText, "item": `https://tranhuyland.vn/nha-dat/${slug}` },
+    ],
+  };
+
   const enrichedItem = {
     ...item,
     linkMap: item.linkMap || item.toado || item.toaDo || "",
@@ -177,6 +188,10 @@ export default async function NhaDatDetail({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <Header />

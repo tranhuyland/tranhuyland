@@ -25,6 +25,11 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+const removeAccents = (str: string) => {
+  if (!str) return "";
+  return str.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").trim();
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const exactName = LOCATION_MAP[slug] || slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
@@ -97,8 +102,44 @@ export default async function LocationPage({ params }: Props) {
   const { slug } = await params;
   const exactName = LOCATION_MAP[slug] || slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 
+  const allData = await getBdsData();
+  const locationItems = allData.filter((item: any) => {
+    const khuVuc = removeAccents(item.khuVuc || item.KhuVuc || "");
+    return khuVuc === removeAccents(exactName);
+  }).slice(0, 20);
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "https://tranhuyland.vn/" },
+      { "@type": "ListItem", "position": 2, "name": "Khu vực", "item": "https://tranhuyland.vn/" },
+      { "@type": "ListItem", "position": 3, "name": `Nhà đất ${exactName}`, "item": `https://tranhuyland.vn/vi-tri/${slug}` },
+    ],
+  };
+
+  const collectionPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": `Mua bán nhà đất ${exactName}, Đà Nẵng`,
+    "url": `https://tranhuyland.vn/vi-tri/${slug}`,
+    "inLanguage": "vi-VN",
+    "isPartOf": { "@id": "https://tranhuyland.vn/#website" },
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": locationItems.map((item: any, idx: number) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "url": `https://tranhuyland.vn/nha-dat/${item.slug}`,
+        "name": item.tieude || "Bất động sản",
+      })),
+    },
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionPageSchema) }} />
       <Header />
 
       <nav className="sticky top-[56px] md:top-[64px] z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
