@@ -55,8 +55,8 @@ const calculateGiaM2 = (item: any) => {
         giaTriTrieu = so < 1000 ? so * 1000 : so;
     } else {
         const giaStr = (item.gia || "").toLowerCase().replace(/x/g, '0');
-        if (giaStr.includes('tỷ') || giaStr.includes('ty')) {
-            const match = giaStr.match(/([\d,.]+)\s*(?:tỷ|ty)\s*([\d]+)?/);
+        if (giaStr.includes('tỵ') || giaStr.includes('ty')) {
+            const match = giaStr.match(/([\d,.]+)\s*(?:tỵ|ty)\s*([\d]+)?/);
             if (match) {
                 const ty = parseFloat(match[1].replace(/,/g, '.'));
                 let trieu = 0;
@@ -375,7 +375,7 @@ export default function PropertyClient({ item, initialCoverImage }: PropertyClie
             onMouseUp={() => { isDragging.current = false; }} onMouseLeave={() => { isDragging.current = false; }}
             onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => { isDragging.current = false; touchStartDist.current = 0; }}
           >
-            <img src={layUrlAnhChuan(anhSoDoGoc)} alt="Sổ hồng bản vẽ chi tiết" draggable={false} style={{ transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`, transition: isDragging.current ? "none" : "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)" }} className="max-w-[95vw] max-h-[80vh] object-contain rounded-lg shadow-2xl origin-center pointer-events-auto select-none" />
+            <img src={layUrlAnhChuan(anhSoDoGoc)} alt={`Sổ hồng bản vẽ chi tiết: ${item?.tieude || "Bất động sản"}`} title={item?.tieude || "Sổ đỏ bản vẽ"} draggable={false} loading="lazy" decoding="async" style={{ transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`, transition: isDragging.current ? "none" : "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)" }} className="max-w-[95vw] max-h-[80vh] object-contain rounded-lg shadow-2xl origin-center pointer-events-auto select-none" />
           </div>
 
           {scale === 1 && (<div className="absolute bottom-6 text-white/50 text-xs font-medium bg-black/40 px-4 py-1.5 rounded-full pointer-events-none tracking-wider uppercase text-center">Dùng 2 ngón tay hoặc bấm nút để phóng to bản vẽ</div>)}
