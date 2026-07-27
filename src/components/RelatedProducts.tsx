@@ -51,6 +51,7 @@ export default function RelatedProducts({ currentItem, allItems }: RelatedProduc
                   className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out" 
                   sizes="(max-width: 768px) 50vw, 25vw"
                   loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
