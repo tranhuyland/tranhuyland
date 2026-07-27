@@ -123,7 +123,7 @@ export default async function BlogDetailPage({ params }: Props) {
       "name": "Trần Huy Land",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://tranhuyland.vn/icon.png",
+        "url": "https://tranhuyland.vn/icon.svg",
       },
     },
     "mainEntityOfPage": {
