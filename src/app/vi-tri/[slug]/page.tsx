@@ -1,4 +1,5 @@
-import { getBdsData, getBlogData } from "@/lib/googleSheets";
+import { Suspense } from "react";
+import { getBdsData } from "@/lib/googleSheets";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWidgets from "@/components/FloatingWidgets";
@@ -74,18 +75,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+function ListingFallback() {
+  return (
+    <div className="max-w-7xl mx-auto w-full px-4 mt-8 mb-20 min-h-[80vh]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden animate-pulse">
+            <div className="aspect-[16/10] bg-slate-200" />
+            <div className="p-4 space-y-3">
+              <div className="h-4 bg-slate-200 rounded w-3/4" />
+              <div className="h-4 bg-slate-200 rounded w-1/2" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default async function LocationPage({ params }: Props) {
   const { slug } = await params;
   const exactName = LOCATION_MAP[slug] || slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-  const allData = await getBdsData();
-
-  const allBlogs = await getBlogData();
-  const locationNameLower = exactName.toLowerCase();
-  const relatedBlogs = allBlogs.filter((b: any) => {
-    const bTitle = (b.title || "").toLowerCase();
-    const bExcerpt = (b.excerpt || "").toLowerCase();
-    return bTitle.includes(locationNameLower) || bExcerpt.includes(locationNameLower);
-  }).slice(0, 4);
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
@@ -93,25 +103,16 @@ export default async function LocationPage({ params }: Props) {
 
       <nav className="sticky top-[56px] md:top-[64px] z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
         <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-slate-500 flex-nowrap overflow-hidden">
-          
-          <Link
-            href="/"
-            className="flex items-center gap-1 text-slate-600 hover:text-orange-600 transition-colors font-semibold shrink-0"
-          >
+          <Link href="/" className="flex items-center gap-1 text-slate-600 hover:text-orange-600 transition-colors font-semibold shrink-0">
             <Home className="w-3.5 h-3.5 text-slate-500 shrink-0" />
             Trang chủ
           </Link>
-
           <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          
           <span className="text-slate-700 font-semibold shrink-0">Khu vực</span>
-          
           <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          
           <span className="text-orange-600 font-extrabold min-w-0 flex-1 truncate text-[13px] sm:text-[14.5px] tracking-tight">
             {exactName}
           </span>
-
         </div>
       </nav>
 
@@ -124,28 +125,17 @@ export default async function LocationPage({ params }: Props) {
         </p>
       </div>
 
-      <div className="flex-grow -mt-4">
-        <ListingSection allBdsItems={allData} forceDistrict={exactName} />
-      </div>
-
-      <nav aria-label="Liên kết nội bộ" className="sr-only">
-        <h2>Liên kết liên quan</h2>
-        <ul>
-          <li><Link href="/loai-hinh/dat">Mua bán đất {exactName}</Link></li>
-          <li><Link href="/loai-hinh/nha-pho">Mua bán nhà phố {exactName}</Link></li>
-          <li><Link href="/loai-hinh/can-ho">Mua bán căn hộ {exactName}</Link></li>
-          <li><Link href="/loai-hinh/cho-thue">Cho thuê bất động sản {exactName}</Link></li>
-          <li><Link href="/blog">Góc tư vấn bất động sản Đà Nẵng</Link></li>
-          {relatedBlogs.map((b: any) => (
-            <li key={b.slug}>
-              <Link href={`/blog/${b.slug}`}>{b.title}</Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <Suspense fallback={<ListingFallback />}>
+        <LocationListingWrapper exactName={exactName} />
+      </Suspense>
 
       <Footer />
       <FloatingWidgets />
     </main>
   );
+}
+
+async function LocationListingWrapper({ exactName }: { exactName: string }) {
+  const allData = await getBdsData();
+  return <ListingSection allBdsItems={allData} forceDistrict={exactName} />;
 }

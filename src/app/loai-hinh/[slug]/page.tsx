@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getBdsData, getBlogData } from "@/lib/googleSheets";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -72,32 +73,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+function ListingFallback() {
+  return (
+    <div className="max-w-7xl mx-auto w-full px-4 mt-8 mb-20 min-h-[80vh]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden animate-pulse">
+            <div className="aspect-[16/10] bg-slate-200" />
+            <div className="p-4 space-y-3">
+              <div className="h-4 bg-slate-200 rounded w-3/4" />
+              <div className="h-4 bg-slate-200 rounded w-1/2" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default async function PropertyTypePage({ params }: Props) {
   const { slug } = await params;
   const exactName = TYPE_MAP[slug] || "Bất động sản";
   const action = slug === "cho-thue" ? "Cho thuê" : "Mua bán";
-  
-  const allData = await getBdsData();
-  const allBlogs = await getBlogData();
-  const typeLower = exactName.toLowerCase();
-  const relatedBlogs = allBlogs.filter((b: any) => {
-    const bTitle = (b.title || "").toLowerCase();
-    const bExcerpt = (b.excerpt || "").toLowerCase();
-    return bTitle.includes(typeLower) || bExcerpt.includes(typeLower);
-  }).slice(0, 4);
-
-  const removeAccents = (str: string) => {
-    return str.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").trim();
-  };
-
-  const filteredData = allData.filter((item: any) => {
-    const textToSearch = removeAccents(`${item.tieude || ""} ${item.tag || ""} ${item.loaiHinh || item.phân_loại || ""}`);
-    if (slug === "dat") return textToSearch.includes("dat");
-    if (slug === "nha-pho") return textToSearch.includes("nha pho");
-    if (slug === "can-ho") return textToSearch.includes("can ho");
-    if (slug === "cho-thue") return textToSearch.includes("cho thue");
-    return true;
-  });
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
@@ -125,9 +122,9 @@ export default async function PropertyTypePage({ params }: Props) {
         </p>
       </div>
 
-      <div className="flex-grow -mt-4">
-        <ListingSection allBdsItems={filteredData} />
-      </div>
+      <Suspense fallback={<ListingFallback />}>
+        <TypeListingWrapper slug={slug} />
+      </Suspense>
 
       <nav aria-label="Liên kết nội bộ" className="sr-only">
         <h2>Liên kết liên quan</h2>
@@ -139,6 +136,47 @@ export default async function PropertyTypePage({ params }: Props) {
           <li><Link href="/vi-tri/son-tra">{exactName} Sơn Trà</Link></li>
           <li><Link href="/vi-tri/hoa-xuan">{exactName} Hòa Xuân</Link></li>
           <li><Link href="/blog">Góc tư vấn bất động sản Đà Nẵng</Link></li>
+        </ul>
+      </nav>
+
+      <Footer />
+      <FloatingWidgets />
+    </main>
+  );
+}
+
+async function TypeListingWrapper({ slug }: { slug: string }) {
+  const allData = await getBdsData();
+  const allBlogs = await getBlogData();
+  const exactName = TYPE_MAP[slug] || "Bất động sản";
+  const typeLower = exactName.toLowerCase();
+  const relatedBlogs = allBlogs.filter((b: any) => {
+    const bTitle = (b.title || "").toLowerCase();
+    const bExcerpt = (b.excerpt || "").toLowerCase();
+    return bTitle.includes(typeLower) || bExcerpt.includes(typeLower);
+  }).slice(0, 4);
+
+  const removeAccents = (str: string) => {
+    return str.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").trim();
+  };
+
+  const filteredData = allData.filter((item: any) => {
+    const textToSearch = removeAccents(`${item.tieude || ""} ${item.tag || ""} ${item.loaiHinh || item.phân_loại || ""}`);
+    if (slug === "dat") return textToSearch.includes("dat");
+    if (slug === "nha-pho") return textToSearch.includes("nha pho");
+    if (slug === "can-ho") return textToSearch.includes("can ho");
+    if (slug === "cho-thue") return textToSearch.includes("cho thue");
+    return true;
+  });
+
+  return (
+    <>
+      <div className="flex-grow -mt-4">
+        <ListingSection allBdsItems={filteredData} />
+      </div>
+      <nav aria-label="Liên kết nội bộ" className="sr-only">
+        <h2>Bài viết liên quan</h2>
+        <ul>
           {relatedBlogs.map((b: any) => (
             <li key={b.slug}>
               <Link href={`/blog/${b.slug}`}>{b.title}</Link>
@@ -146,9 +184,6 @@ export default async function PropertyTypePage({ params }: Props) {
           ))}
         </ul>
       </nav>
-
-      <Footer />
-      <FloatingWidgets />
-    </main>
+    </>
   );
 }
