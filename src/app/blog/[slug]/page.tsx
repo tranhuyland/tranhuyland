@@ -126,9 +126,12 @@ export default async function BlogDetailPage({ params }: Props) {
         <div className="relative aspect-video rounded-2xl md:rounded-3xl overflow-hidden mb-12 bg-slate-50 border border-slate-100 shadow-md">
           <Image
             src={blog.image || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1200&auto=format&fit=crop"}
-            alt={blog.title}
+            alt={`Ảnh bìa bài viết: ${blog.title}`}
+            title={blog.title}
             fill
             priority={true}
+            fetchPriority="high"
+            sizes="(max-width: 768px) 100vw, 768px"
             className="object-cover hover:scale-105 transition-transform duration-700"
             unoptimized={true}
           />
