@@ -5,8 +5,9 @@
 /* 🌟 Cấu hình cơ bản */
 html { 
   scroll-behavior: smooth; 
-  /* Chặn hiện tượng lướt trang "nảy" khó chịu trên di động */
   overscroll-behavior-y: none; 
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
 }
 
 body { 
@@ -14,6 +15,21 @@ body {
   background-color: #F8FAFC; 
   color: #0f172a; 
   -webkit-font-smoothing: antialiased;
+}
+
+/* 🚀 Performance: content-visibility for offscreen sections */
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+/* 🚀 Prevent layout shift during font load */
+@font-face {
+  font-family: 'Plus Jakarta Sans Fallback';
+  src: local('system-ui');
+  size-adjust: 100%;
+  ascent-override: 90%;
+  descent-override: 20%;
 }
 
 /* 🌟 Hiệu ứng Glassmorphism chuyên nghiệp */

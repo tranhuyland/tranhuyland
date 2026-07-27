@@ -19,7 +19,7 @@ interface PropertyGalleryProps {
   linkMap?: string; 
   maNhungMap?: string; 
   toaDo?: string;
-  initialCoverImage?: string; // ⚡ ĐÃ KHÔI PHỤC ĐỂ KHỚP VỚI PROPERTYCLIENT
+  initialCoverImage?: string;
 }
 
 export default function SlideBds({ 
@@ -108,7 +108,8 @@ export default function SlideBds({
           <div className="absolute inset-0 z-20 w-full h-full pointer-events-none bg-slate-100 animate-pulse-slow">
             <Image 
               src={initialCoverImage || layUrlAnhChuan(images[0], 800)} 
-              alt={`${alt} - Bìa hiển thị khẩn cấp`} 
+              alt={`${alt} - Ảnh bìa`} 
+              title={alt}
               fill 
               priority={true}
               fetchPriority="high"
@@ -144,10 +145,13 @@ export default function SlideBds({
                 <Image 
                   src={layUrlAnhChuan(img, 800)} 
                   alt={`${alt} - Hình ${idx + 1}`} 
+                  title={alt}
                   fill 
                   priority={idx === 0}
+                  fetchPriority={idx === 0 ? "high" : "auto"}
                   loading={idx === 0 ? "eager" : "lazy"}
-                  sizes="(max-width: 768px) 100vw, 800px" 
+                  decoding="async"
+                  sizes="(max-width: 768px) 100vw, 800px"
                   className="object-cover" 
                 />
               </div>
@@ -221,11 +225,13 @@ export default function SlideBds({
                     <div className="swiper-zoom-container h-full w-full flex items-center justify-center">
                       <Image 
                         src={layUrlAnhChuan(img, 1600)} 
-                        alt={`${alt} - Full ${idx + 1}`} 
+                        alt={`${alt} - Ảnh cỡ lớn ${idx + 1}`} 
+                        title={alt}
                         width={1600} 
                         height={1200} 
                         loading={idx === activeIndex ? "eager" : "lazy"}
                         priority={idx === activeIndex} 
+                        fetchPriority={idx === activeIndex ? "high" : "auto"}
                         className="object-contain max-h-[85vh] max-w-full" 
                       />
                     </div>

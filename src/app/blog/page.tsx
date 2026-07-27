@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { BookOpen } from "lucide-react";
 import { getBlogData } from "@/lib/googleSheets";
 import Header from "@/components/Header";
@@ -6,10 +7,8 @@ import Footer from "@/components/Footer";
 import FloatingWidgets from "@/components/FloatingWidgets";
 import BlogList from "@/components/BlogList";
 
-// 🚀 TỐI ƯU 1: Chuyển từ "force-dynamic" sang ISR 60 giây (Load tức thì, không làm sập Google Sheet)
 export const revalidate = 60;
 
-// 🌐 VŨ KHÍ SEO META ĐẦY ĐỦ CHO GOOGLE & ZALO
 export const metadata: Metadata = {
   title: "Góc Tư Vấn Bất Động Sản Đà Nẵng",
   description: "Chuyên mục chia sẻ kinh nghiệm mua bán nhà đất, thủ tục pháp lý, sổ đỏ và phân tích thị trường bất động sản thực tế tại Đà Nẵng.",
@@ -50,15 +49,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function BlogPage() {
-  // 🚀 TỐI ƯU 2 & 3: Bọc giáp an toàn (Defensive programming)
-  const blogs = (await getBlogData()) || [];
+function BlogListFallback() {
+  return (
+    <div className="w-full max-w-7xl mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="bg-white rounded-3xl border border-slate-100 overflow-hidden animate-pulse">
+            <div className="aspect-[16/10] bg-slate-200" />
+            <div className="p-5 space-y-3">
+              <div className="h-4 bg-slate-200 rounded w-3/4" />
+              <div className="h-4 bg-slate-200 rounded w-full" />
+              <div className="h-4 bg-slate-200 rounded w-2/3" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
+export default async function BlogPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900 selection:bg-orange-500 selection:text-white">
       <Header />
 
-      {/* 🌟 KHỐI BANNER CHUYÊN MỤC CẤP CAO */}
       <div className="bg-slate-900 text-white pt-32 pb-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.15),transparent_50%)]" />
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center md:text-left">
@@ -74,13 +88,19 @@ export default async function BlogPage() {
         </div>
       </div>
 
-      {/* 🌟 GIAO PHÓ HOÀN TOÀN DỮ LIỆU SẠCH XUỐNG CHO COMPONENT CLIENT */}
       <main className="flex-1 w-full pb-12">
-        <BlogList allBlogItems={blogs} />
+        <Suspense fallback={<BlogListFallback />}>
+          <BlogListWrapper />
+        </Suspense>
       </main>
 
       <Footer />
       <FloatingWidgets />
     </div>
   );
+}
+
+async function BlogListWrapper() {
+  const blogs = (await getBlogData()) || [];
+  return <BlogList allBlogItems={blogs} />;
 }

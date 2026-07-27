@@ -79,7 +79,7 @@ export default function BdsCard({ item, rank, isFavorite, onToggleFavorite }: Bd
     <div className="group bg-white rounded-xl overflow-hidden border border-slate-200 hover:border-orange-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1 active:translate-y-0 active:scale-[0.98]">
       
       <Link href={`/nha-dat/${item?.slug || ''}`} onClick={handleLinkClick} aria-label={`Xem chi tiết: ${item?.tieude || ''}`} className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 block">
-        <Image src={thumbnail} alt={item?.tieude || "Trần Huy Land"} fill className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out" sizes="(max-width: 1280px) 100vw" priority={false} />
+        <Image src={thumbnail} alt={`Ảnh bất động sản: ${item?.tieude || "Trần Huy Land"}`} title={item?.tieude || "Trần Huy Land"} fill className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out" sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw" loading="lazy" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
         <div className="absolute top-2 left-0 flex flex-col items-start gap-1.5 z-10">
@@ -141,9 +141,7 @@ export default function BdsCard({ item, rank, isFavorite, onToggleFavorite }: Bd
               <span className="text-[12px] sm:text-[13px] font-bold whitespace-nowrap">Chia sẻ</span>
             </div>
 
-            <div role="button" tabIndex={0} aria-label={isFavorite ? "Bỏ lưu tin này" : "Lưu tin này"} className={`px-3 py-2 sm:px-3 min-h-[44px] border rounded-xl active:scale-95 transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer ${isFavorite ? 'border-red-200 text-red-500 bg-red-50' : 'border-slate-200 text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50'}`}
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleFavorite(e); }}
-            >
+            <div role="button" tabIndex={0} aria-label={isFavorite ? "Bỏ lưu tin này" : "Lưu tin này"} className={`px-3 py-2 sm:px-3 min-h-[44px] border rounded-xl active:scale-95 transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer ${isFavorite ? 'border-red-200 text-red-500 bg-red-50' : 'border-slate-200 text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50'}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleFavorite(e); }}>
               <Heart size={15} fill={isFavorite ? "currentColor" : "none"} aria-hidden="true" className={isFavorite ? "scale-110 transition-transform" : "transition-transform"} />
               <span className="text-[12px] sm:text-[13px] font-bold whitespace-nowrap">{isFavorite ? 'Đã lưu' : 'Lưu tin'}</span>
             </div>

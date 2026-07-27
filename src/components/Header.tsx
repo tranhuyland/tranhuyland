@@ -47,8 +47,8 @@ export default function Header() {
       <header className="sticky top-0 z-[55] bg-white/85 backdrop-blur-md border-b border-slate-100 shadow-sm transition-all duration-300">
         {/* ĐÃ TỐI ƯU DOM: Loại bỏ div bọc ngoài cùng không cần thiết của logo khi cuộn */}
         {isHomePage && !isScrolled && (
-          <Link href="/" className="relative h-10 w-40 mt-2 mx-auto block animate-in fade-in duration-200">
-            <Image src="/logo.png" alt="Trần Huy Land" fill className="object-contain" priority />
+          <Link href="/" aria-label="Trang chủ Trần Huy Land" className="relative h-10 w-40 mt-2 mx-auto block animate-in fade-in duration-200">
+            <Image src="/logo.png" alt="Logo Trần Huy Land" title="Trần Huy Land" fill sizes="160px" className="object-contain" priority fetchPriority="high" />
           </Link>
         )}
 
@@ -60,7 +60,7 @@ export default function Header() {
               </button>
 
               <Link href="/" className="relative h-8 w-36 sm:h-9 sm:w-40 mx-auto block active:scale-95 transition-transform" aria-label="Về trang chủ Trần Huy Land">
-                <Image src="/logo.png" alt="Trần Huy Land" fill className="object-contain" priority />
+                <Image src="/logo.png" alt="Logo Trần Huy Land" title="Trần Huy Land" fill sizes="160px" className="object-contain" priority fetchPriority="high" />
               </Link>
             </>
           ) : (

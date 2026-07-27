@@ -1,4 +1,5 @@
-import { getBdsData } from "@/lib/googleSheets";
+import { Suspense } from "react";
+import { getBdsData, getBlogData } from "@/lib/googleSheets";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWidgets from "@/components/FloatingWidgets";
@@ -8,7 +9,6 @@ import React from "react";
 import Link from "next/link";
 import { Home, ChevronRight } from "lucide-react";
 
-// 🚀 KÍCH HOẠT ISR: Tự động làm mới dữ liệu sau mỗi 60 giây
 export const revalidate = 60;
 
 const TYPE_MAP: Record<string, string> = {
@@ -22,7 +22,6 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// 🌐 BƠM THẺ SEO ĐỘNG CHO GOOGLE
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const exactName = TYPE_MAP[slug] || "Bất động sản";
@@ -74,14 +73,89 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+function ListingFallback() {
+  return (
+    <div className="max-w-7xl mx-auto w-full px-4 mt-8 mb-20 min-h-[80vh]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden animate-pulse">
+            <div className="aspect-[16/10] bg-slate-200" />
+            <div className="p-4 space-y-3">
+              <div className="h-4 bg-slate-200 rounded w-3/4" />
+              <div className="h-4 bg-slate-200 rounded w-1/2" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default async function PropertyTypePage({ params }: Props) {
   const { slug } = await params;
   const exactName = TYPE_MAP[slug] || "Bất động sản";
   const action = slug === "cho-thue" ? "Cho thuê" : "Mua bán";
-  
-  const allData = await getBdsData();
 
-  // Thuật toán lọc
+  return (
+    <main className="min-h-screen bg-slate-50 flex flex-col">
+      <Header />
+
+      <nav className="sticky top-[56px] z-40 bg-white border-b border-slate-200 shadow-sm w-full">
+        <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center text-sm text-slate-600">
+          <Link href="/" className="hover:text-orange-600 flex items-center shrink-0">
+            <Home className="w-4 h-4 mr-1" />
+            Trang chủ
+          </Link>
+          <ChevronRight className="w-4 h-4 mx-2 text-slate-400" />
+          <span className="font-medium text-slate-900 shrink-0">Loại hình</span>
+          <ChevronRight className="w-4 h-4 mx-2 text-slate-400" />
+          <span className="font-bold text-orange-600 truncate">{exactName}</span>
+        </div>
+      </nav>
+
+      <div className="pt-2 pb-12 bg-slate-900 text-center px-4 !mt-0">
+        <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+          {action} <span className="text-orange-500">{exactName}</span> Đà Nẵng
+        </h1>
+        <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+          Tổng hợp giỏ hàng {exactName.toLowerCase()} chính chủ, giá tốt nhất tại Đà Nẵng. Pháp lý chuẩn, cập nhật mới nhất hôm nay.
+        </p>
+      </div>
+
+      <Suspense fallback={<ListingFallback />}>
+        <TypeListingWrapper slug={slug} />
+      </Suspense>
+
+      <nav aria-label="Liên kết nội bộ" className="sr-only">
+        <h2>Liên kết liên quan</h2>
+        <ul>
+          <li><Link href="/vi-tri/hai-chau">{exactName} Hải Châu</Link></li>
+          <li><Link href="/vi-tri/thanh-khe">{exactName} Thanh Khê</Link></li>
+          <li><Link href="/vi-tri/hoa-cuong">{exactName} Hòa Cường</Link></li>
+          <li><Link href="/vi-tri/cam-le">{exactName} Cẩm Lệ</Link></li>
+          <li><Link href="/vi-tri/son-tra">{exactName} Sơn Trà</Link></li>
+          <li><Link href="/vi-tri/hoa-xuan">{exactName} Hòa Xuân</Link></li>
+          <li><Link href="/blog">Góc tư vấn bất động sản Đà Nẵng</Link></li>
+        </ul>
+      </nav>
+
+      <Footer />
+      <FloatingWidgets />
+    </main>
+  );
+}
+
+async function TypeListingWrapper({ slug }: { slug: string }) {
+  const allData = await getBdsData();
+  const allBlogs = await getBlogData();
+  const exactName = TYPE_MAP[slug] || "Bất động sản";
+  const typeLower = exactName.toLowerCase();
+  const relatedBlogs = allBlogs.filter((b: any) => {
+    const bTitle = (b.title || "").toLowerCase();
+    const bExcerpt = (b.excerpt || "").toLowerCase();
+    return bTitle.includes(typeLower) || bExcerpt.includes(typeLower);
+  }).slice(0, 4);
+
   const removeAccents = (str: string) => {
     return str.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").trim();
   };
@@ -96,39 +170,20 @@ export default async function PropertyTypePage({ params }: Props) {
   });
 
   return (
-    <main className="min-h-screen bg-slate-50 flex flex-col">
-      <Header />
-
-      {/* 🗺️ BREADCRUMB CỐ ĐỊNH SÁT HEADER */}
-      <nav className="sticky top-[56px] z-40 bg-white border-b border-slate-200 shadow-sm w-full">
-        <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center text-sm text-slate-600">
-          <Link href="/" className="hover:text-orange-600 flex items-center shrink-0">
-            <Home className="w-4 h-4 mr-1" />
-            Trang chủ
-          </Link>
-          <ChevronRight className="w-4 h-4 mx-2 text-slate-400" />
-          <span className="font-medium text-slate-900 shrink-0">Loại hình</span>
-          <ChevronRight className="w-4 h-4 mx-2 text-slate-400" />
-          <span className="font-bold text-orange-600 truncate">{exactName}</span>
-        </div>
-      </nav>
-
-      {/* KHỐI HERO: Giảm pt để dính sát Breadcrumb */}
-      <div className="pt-2 pb-12 bg-slate-900 text-center px-4 !mt-0">
-        <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-          {action} <span className="text-orange-500">{exactName}</span> Đà Nẵng
-        </h1>
-        <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-          Tổng hợp giỏ hàng {exactName.toLowerCase()} chính chủ, giá tốt nhất tại Đà Nẵng. Pháp lý chuẩn, cập nhật mới nhất hôm nay.
-        </p>
-      </div>
-
+    <>
       <div className="flex-grow -mt-4">
         <ListingSection allBdsItems={filteredData} />
       </div>
-
-      <Footer />
-      <FloatingWidgets />
-    </main>
+      <nav aria-label="Liên kết nội bộ" className="sr-only">
+        <h2>Bài viết liên quan</h2>
+        <ul>
+          {relatedBlogs.map((b: any) => (
+            <li key={b.slug}>
+              <Link href={`/blog/${b.slug}`}>{b.title}</Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </>
   );
 }

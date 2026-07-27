@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Calendar, ChevronLeft, User, Phone, ArrowRight, Building2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import { getBlogData } from "@/lib/googleSheets";
+import { getBlogData, getBdsData } from "@/lib/googleSheets";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWidgets from "@/components/FloatingWidgets";
@@ -16,7 +16,6 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// 🌐 HÀM 1: TỰ ĐỘNG SINH META SEO CHUẨN GOOGLE & MẠNG XÃ HỘI
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const blogs = await getBlogData();
@@ -28,7 +27,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     robots: { index: false, follow: false },
   };
 
-  // Lấy ảnh bìa, nếu không có thì lấy logo mặc định để đảm bảo không bị lỗi ảnh trắng
   const imageUrl = blog.image && blog.image.startsWith('http')
     ? blog.image
     : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630&q=80';
@@ -86,14 +84,24 @@ export default async function BlogDetailPage({ params }: Props) {
 
   const contentBody = blog.content || "";
 
+  const currentCategory = blog.category || "";
+  const relatedBlogs = currentCategory
+    ? blogs.filter(b => b.slug !== slug && (b.category || "") === currentCategory).slice(0, 4)
+    : blogs.filter(b => b.slug !== slug).slice(0, 4);
+
+  const allProperties = await getBdsData();
+  const blogText = `${blog.title} ${blog.excerpt} ${contentBody}`.toLowerCase();
+  const relatedProperties = allProperties.filter((p: any) => {
+    const khuVuc = (p.khuVuc || "").toLowerCase();
+    return khuVuc && blogText.includes(khuVuc);
+  }).slice(0, 5);
+
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans text-slate-900 selection:bg-orange-500 selection:text-white">
       <Header />
 
-      {/* 🚀 BÍ MẬT 1: Thu hẹp max-w-4xl xuống max-w-3xl (768px). Đây là "Kích thước ranh giới mắt" chuẩn Medium */}
       <main className="flex-1 pt-28 pb-20 max-w-3xl w-full mx-auto px-4 sm:px-6">
         
-        {/* NÚT QUAY LẠI */}
         <div className="mb-8">
           <Link 
             href="/blog"
@@ -104,12 +112,10 @@ export default async function BlogDetailPage({ params }: Props) {
           </Link>
         </div>
 
-        {/* 🚀 BÍ MẬT 2: Tiêu đề H1 chuẩn Báo chí (32px - 34px), đậm vừa phải font-bold */}
         <h1 className="text-[26px] sm:text-[30px] md:text-[34px] font-bold tracking-tight text-[#111111] leading-[1.3] mb-4">
           {blog.title}
         </h1>
 
-        {/* 🚀 BÍ MẬT 3: Gỡ bỏ các "Hộp màu sặc sỡ" ở thanh tác giả, chuyển về text xám thanh lịch */}
         <div className="flex flex-wrap items-center gap-y-2 gap-x-3 text-slate-500 text-xs md:text-sm font-medium mb-10 pb-6 border-b border-slate-100">
           <div className="flex items-center gap-1.5 text-slate-800">
             <User size={15} className="text-orange-500" />
@@ -122,39 +128,34 @@ export default async function BlogDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* ẢNH BÌA PHÓNG LỚN */}
         <div className="relative aspect-video rounded-2xl md:rounded-3xl overflow-hidden mb-12 bg-slate-50 border border-slate-100 shadow-md">
           <Image
             src={blog.image || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1200&auto=format&fit=crop"}
-            alt={blog.title}
+            alt={`Ảnh bìa bài viết: ${blog.title}`}
+            title={blog.title}
             fill
             priority={true}
+            fetchPriority="high"
+            sizes="(max-width: 768px) 100vw, 768px"
             className="object-cover hover:scale-105 transition-transform duration-700"
             unoptimized={true}
           />
         </div>
 
-        {/* 🚀 BÍ MẬT 4: TYPOGRAPHY THÂN BÀI — 18px, dòng giãn 1.8, màu Soft Charcoal #222222 */}
         <article className="prose prose-slate max-w-none text-[#222222] text-[17px] md:text-[18px] leading-[1.8] tracking-[0.005em] whitespace-pre-line">
           <ReactMarkdown
             components={{
-              // Chữ đậm: Trả về font-bold (700) để không bị "nặng cộp" trang viết
               strong: ({ node, ...props }) => <strong className="font-bold text-[#111111]" {...props} />,
               
-              // Đoạn văn: Cách nhau đúng 24px chuẩn nhịp thở mắt
               p: ({ node, ...props }) => <p className="mb-6 last:mb-0" {...props} />,
               
-              // Thẻ H2: Sang trọng, có đường gạch chân mờ phân tách chương
               h2: ({ node, ...props }) => <h2 className="text-[20px] md:text-[22px] font-bold text-[#111111] mt-12 mb-4 pb-2 border-b border-slate-100" {...props} />,
               
-              // Thẻ H3: Tinh tế
               h3: ({ node, ...props }) => <h3 className="text-[18px] md:text-[19px] font-bold text-slate-800 mt-8 mb-3" {...props} />,
               
-              // Danh sách
               ul: ({ node, ...props }) => <ul className="list-disc pl-5 mb-6 space-y-2.5 text-[#222222]" {...props} />,
               li: ({ node, ...props }) => <li className="leading-[1.8]" {...props} />,
               
-              // Lõi Ma Trận Silo (Giữ nguyên)
               a: ({ node, href, children, ...props }) => {
                 if (!href) return <span {...props}>{children}</span>;
 
@@ -192,7 +193,6 @@ export default async function BlogDetailPage({ params }: Props) {
           </ReactMarkdown>
         </article>
 
-        {/* HỘP PHỄU CHUYỂN ĐỔI KÉP */}
         <div className="mt-16 bg-gradient-to-br from-slate-900 via-slate-800 to-orange-950 text-white p-8 md:p-10 rounded-3xl relative overflow-hidden border border-slate-800 shadow-2xl">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.15),transparent_50%)]" />
           
@@ -231,6 +231,32 @@ export default async function BlogDetailPage({ params }: Props) {
         </div>
 
       </main>
+
+      <nav aria-label="Liên kết nội bộ" className="sr-only">
+        <h2>Liên kết liên quan</h2>
+        <ul>
+          {relatedBlogs.map((b: any) => (
+            <li key={b.slug}>
+              <Link href={`/blog/${b.slug}`}>{b.title}</Link>
+            </li>
+          ))}
+          <li><Link href="/loai-hinh/dat">Mua bán đất Đà Nẵng</Link></li>
+          <li><Link href="/loai-hinh/nha-pho">Mua bán nhà phố Đà Nẵng</Link></li>
+          <li><Link href="/loai-hinh/can-ho">Mua bán căn hộ Đà Nẵng</Link></li>
+          <li><Link href="/loai-hinh/cho-thue">Cho thuê bất động sản Đà Nẵng</Link></li>
+          <li><Link href="/vi-tri/hai-chau">Nhà đất Hải Châu</Link></li>
+          <li><Link href="/vi-tri/thanh-khe">Nhà đất Thanh Khê</Link></li>
+          <li><Link href="/vi-tri/hoa-cuong">Nhà đất Hòa Cường</Link></li>
+          <li><Link href="/vi-tri/cam-le">Nhà đất Cẩm Lệ</Link></li>
+          <li><Link href="/vi-tri/son-tra">Nhà đất Sơn Trà</Link></li>
+          <li><Link href="/vi-tri/hoa-xuan">Nhà đất Hòa Xuân</Link></li>
+          {relatedProperties.slice(0, 5).map((p: any) => (
+            <li key={p.slug}>
+              <Link href={`/nha-dat/${p.slug}`}>{p.tieude}</Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <Footer />
       <FloatingWidgets />

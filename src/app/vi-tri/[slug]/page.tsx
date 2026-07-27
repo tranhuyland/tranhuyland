@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getBdsData } from "@/lib/googleSheets";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -8,7 +9,6 @@ import React from "react";
 import Link from "next/link";
 import { Home, ChevronRight } from "lucide-react";
 
-// 🚀 KÍCH HOẠT ISR CACHE
 export const revalidate = 60;
 
 const LOCATION_MAP: Record<string, string> = {
@@ -25,7 +25,6 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// 🌐 1. BƠM THẺ SEO ĐỘNG CHO GOOGLE (Đã khôi phục đầy đủ OpenGraph)
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const exactName = LOCATION_MAP[slug] || slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
@@ -76,42 +75,47 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+function ListingFallback() {
+  return (
+    <div className="max-w-7xl mx-auto w-full px-4 mt-8 mb-20 min-h-[80vh]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden animate-pulse">
+            <div className="aspect-[16/10] bg-slate-200" />
+            <div className="p-4 space-y-3">
+              <div className="h-4 bg-slate-200 rounded w-3/4" />
+              <div className="h-4 bg-slate-200 rounded w-1/2" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default async function LocationPage({ params }: Props) {
   const { slug } = await params;
   const exactName = LOCATION_MAP[slug] || slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-  const allData = await getBdsData();
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
       <Header />
 
-      {/* 🗺️ BREADCRUMB DÁN SÁT HEADER + CHỮ KHU VỰC MÀU CAM CỰC ĐẸP */}
       <nav className="sticky top-[56px] md:top-[64px] z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
         <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm text-slate-500 flex-nowrap overflow-hidden">
-          
-          <Link
-            href="/"
-            className="flex items-center gap-1 text-slate-600 hover:text-orange-600 transition-colors font-semibold shrink-0"
-          >
+          <Link href="/" className="flex items-center gap-1 text-slate-600 hover:text-orange-600 transition-colors font-semibold shrink-0">
             <Home className="w-3.5 h-3.5 text-slate-500 shrink-0" />
             Trang chủ
           </Link>
-
           <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          
           <span className="text-slate-700 font-semibold shrink-0">Khu vực</span>
-          
           <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          
-          {/* 🔥 Tên khu vực bôi đậm (font-extrabold), màu cam (orange-600), cỡ chữ đồng bộ */}
           <span className="text-orange-600 font-extrabold min-w-0 flex-1 truncate text-[13px] sm:text-[14.5px] tracking-tight">
             {exactName}
           </span>
-
         </div>
       </nav>
 
-      {/* KHỐI HERO: DÙNG !mt-0 VÀ pt-2 ĐỂ ÉP SÁT LÊN TRÊN */}
       <div className="pt-2 pb-12 bg-slate-900 text-center px-4 !mt-0">
         <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
           Nhà đất <span className="text-orange-500">{exactName}</span>, Đà Nẵng
@@ -121,12 +125,17 @@ export default async function LocationPage({ params }: Props) {
         </p>
       </div>
 
-      <div className="flex-grow -mt-4">
-        <ListingSection allBdsItems={allData} forceDistrict={exactName} />
-      </div>
+      <Suspense fallback={<ListingFallback />}>
+        <LocationListingWrapper exactName={exactName} />
+      </Suspense>
 
       <Footer />
       <FloatingWidgets />
     </main>
   );
+}
+
+async function LocationListingWrapper({ exactName }: { exactName: string }) {
+  const allData = await getBdsData();
+  return <ListingSection allBdsItems={allData} forceDistrict={exactName} />;
 }

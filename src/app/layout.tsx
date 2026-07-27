@@ -5,11 +5,14 @@ import JsonLd from "@/components/JsonLd";
 import "./globals.css";
 
 const DynamicScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
+const DynamicFloatingWidgets = dynamic(() => import("@/components/FloatingWidgets"));
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["vietnamese"],
   display: "swap",
   variable: "--font-plus-jakarta",
+  preload: true,
+  weight: ["400", "600", "700", "800"],
 });
 
 const SITE_URL = "https://tranhuyland.vn";
@@ -104,13 +107,18 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* 🚀 Chặn trình duyệt tự khôi phục vị trí cuộn */}
         <script
           dangerouslySetInnerHTML={{
             __html: `history.scrollRestoration = 'manual'`,
           }}
         />
 
+        <link
+          rel="preload"
+          href="/hero-bg.jpg"
+          as="image"
+          fetchPriority="high"
+        />
         <link
           rel="preload"
           href="/_next/static/media/9e7b0a821b9dfcb4-s.woff2"
@@ -125,6 +133,9 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
+        <link rel="dns-prefetch" href="//i.postimg.cc" />
+        <link rel="dns-prefetch" href="//images.unsplash.com" />
+        <link rel="dns-prefetch" href="//res.cloudinary.com" />
       </head>
 
       <body
@@ -134,6 +145,7 @@ export default function RootLayout({
         <JsonLd />
         {children}
         <DynamicScrollToTop />
+        <DynamicFloatingWidgets />
       </body>
     </html>
   );

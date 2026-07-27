@@ -3,15 +3,11 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'react';
 import { Lock, FileText, Upload, Loader2, CheckCircle, AlertCircle, RefreshCw, Eye, Sparkles, ImageIcon, Quote, Heading2, Bold, ChevronDown } from 'lucide-react';
 
-// ==========================================
-// 🚨 CẤU HÌNH THÔNG SỐ TRẦN HUY LAND
-// ==========================================
 const GOOGLE_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbx7EAwnF2wGMLkJvGqXerxu6Nxw-rez_kVcHLvRxkSpLYLJLFAbLhjxJDpoLQuMD7Wo3A/exec';
 const CLOUDINARY_CLOUD_NAME = 'ds6k0kfbz'; 
 const CLOUDINARY_UPLOAD_PRESET = 'tranhuyland'; 
 const ADMIN_PASSWORD = '123'; 
 
-// 📁 DANH SÁCH DANH MỤC CỐ ĐỊNH
 const BLOG_CATEGORIES = [
   "Chia sẻ kinh nghiệm",
   "Kiến thức",
@@ -78,7 +74,7 @@ export default function DangBlogPage() {
 
   const [formData, setFormData] = useState({
     title: '',
-    category: '', // 🚀 THÊM STATE DANH MỤC
+    category: '',
     slug: '',
     excerpt: '',
     image: '',
@@ -102,7 +98,6 @@ export default function DangBlogPage() {
     setFormData(prev => ({ ...prev, date: `${dd}/${mm}/${yyyy}` }));
   }, [isAuthenticated]);
 
-  // Tự lưu bản thảo
   useEffect(() => {
     if (!isAuthenticated) return;
     const timer = setTimeout(() => {
@@ -118,7 +113,6 @@ export default function DangBlogPage() {
     if (passwordInput === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
       setAuthError('');
-
       const savedDraft = localStorage.getItem('tranhuyland_blog_draft_v1');
       if (savedDraft) {
         try {
@@ -134,10 +128,8 @@ export default function DangBlogPage() {
     } else { setAuthError('❌ Mật khẩu không chính xác!'); }
   };
 
-  // 🚀 ĐÃ BỌC KIỂU HTMLSelectElement ĐỂ VERCEL KHÔNG BÁO LỖI TYPE
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    
     if (name === 'title') {
       setFormData(prev => ({
         ...prev,
@@ -163,13 +155,11 @@ export default function DangBlogPage() {
     const plainTextClipboard = e.clipboardData.getData('text/plain');
     if (!htmlClipboard && !plainTextClipboard) return;
     e.preventDefault(); 
-
     const markdownOutput = autoFormatToMarkdown(htmlClipboard, plainTextClipboard);
     const textarea = e.currentTarget;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const currentText = formData.content;
-
     const newText = currentText.substring(0, start) + markdownOutput + currentText.substring(end);
     setFormData(prev => ({ ...prev, content: newText }));
     setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + markdownOutput.length; }, 0);
@@ -214,32 +204,24 @@ export default function DangBlogPage() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     setUploadingInlineImg(true); setMessage({ type: '', content: '' });
-
     try {
       const data = new FormData(); 
       data.append('file', files[0]); 
       data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
       const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: data });
       const uploaded = await res.json();
-      
       let optimized = uploaded.secure_url;
       if (optimized.includes("/image/upload/")) {
         optimized = optimized.replace("/image/upload/", "/image/upload/f_auto,q_auto,w_800/");
       }
-
       const textarea = textareaRef.current;
       const currentContent = formData.content;
       const cursorPos = textarea ? textarea.selectionStart : currentContent.length;
-
       const markdownImgSnippet = `\n\n![Ảnh minh họa bài viết](${optimized})\n\n`;
       const newContent = currentContent.slice(0, cursorPos) + markdownImgSnippet + currentContent.slice(cursorPos);
-
       setFormData(prev => ({ ...prev, content: newContent }));
       setMessage({ type: 'success', content: '🎉 Đã bắn ảnh trực tiếp vào vị trí con trỏ trong bài viết!' });
-      
       setTimeout(() => { if (textarea) textarea.selectionStart = textarea.selectionEnd = cursorPos + markdownImgSnippet.length; textarea?.focus(); }, 0);
-
     } catch (err) { 
       setMessage({ type: 'error', content: '❌ Gặp lỗi khi tải ảnh chèn nội dung.' }); 
     } finally { 
@@ -250,12 +232,11 @@ export default function DangBlogPage() {
   const handleSubmitBlog = async (e: FormEvent) => {
     e.preventDefault();
     if (uploadingCover || uploadingInlineImg) return setMessage({ type: 'error', content: '⏳ Vui lòng đợi ảnh tải xong!' });
-
     setLoading(true); setMessage({ type: '', content: '' });
     try {
       const payload = {
         sheet: 'Blog',
-        category: formData.category.trim(), // 🚀 GỬI DANH MỤC SANG SHEET
+        category: formData.category.trim(),
         slug: formData.slug.trim(),
         title: formData.title.trim(),
         excerpt: formData.excerpt.trim(),
@@ -320,7 +301,6 @@ export default function DangBlogPage() {
             <p className="text-xs text-slate-400">Điền chuẩn thông tin bên dưới để bọ Google lập chỉ mục tốt nhất.</p>
           </div>
 
-          {/* Ô 1: TIÊU ĐỀ */}
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-1">
               <span>Tiêu đề bài viết</span><span className="text-red-500">*</span>
@@ -328,7 +308,6 @@ export default function DangBlogPage() {
             <input type="text" name="title" required value={formData.title} onChange={handleInputChange} placeholder="Ví dụ: Có nên đầu tư mua đất nền Hòa Xuân thời điểm này?" className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 focus:bg-white focus:border-orange-500 font-bold text-slate-900 rounded-xl text-[16px] md:text-sm outline-none" />
           </div>
 
-          {/* Ô 2: CHỌN DANH MỤC (MỚI BỔ SUNG) */}
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-1">
               <span>Danh mục bài viết</span><span className="text-red-500">*</span>
@@ -350,7 +329,6 @@ export default function DangBlogPage() {
             </div>
           </div>
 
-          {/* Ô 3: SLUG */}
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-1">
@@ -378,7 +356,6 @@ export default function DangBlogPage() {
             </div>
           </div>
 
-          {/* Ô 4: ẢNH BÌA */}
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-1">
               <span>Ảnh bìa đại diện bài viết</span><span className="text-red-500">*</span>
@@ -391,13 +368,12 @@ export default function DangBlogPage() {
               </label>
               <div className="w-full">
                 {formData.image ? (
-                  <div className="relative aspect-video w-full rounded-lg overflow-hidden border bg-white"><img src={formData.image} alt="cover preview" className="w-full h-full object-cover" /></div>
+                  <div className="relative aspect-video w-full rounded-lg overflow-hidden border bg-white"><img src={formData.image} alt="Xem trước ảnh bìa bài viết" loading="lazy" decoding="async" className="w-full h-full object-cover" /></div>
                 ) : (<div className="h-full py-8 text-center text-slate-400 text-xs italic flex flex-col items-center justify-center gap-1 bg-white rounded-lg border border-dashed"><Eye size={16} /><span>Chưa có ảnh bìa</span></div>)}
               </div>
             </div>
           </div>
 
-          {/* Ô 5: TÓM TẮT */}
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-1">
               <span>Tóm tắt bài viết (Excerpt)</span><span className="text-red-500">*</span>
@@ -424,7 +400,6 @@ export default function DangBlogPage() {
             <div className="text-right text-[11px] text-slate-400 font-medium">Độ dài chuẩn: <span className={formData.excerpt.length > 160 ? 'text-red-500 font-bold' : ''}>{formData.excerpt.length}/160</span></div>
           </div>
 
-          {/* Ô 6: NỘI DUNG CHÍNH */}
           <div className="space-y-1">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
               <label className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-1">
@@ -464,7 +439,6 @@ export default function DangBlogPage() {
             />
           </div>
 
-          {/* Ô 7: NGÀY ĐĂNG */}
           <div className="space-y-2">
             <label className="text-xs font-black uppercase tracking-wider text-slate-500 flex items-center gap-1"><span>Ngày đăng tin</span></label>
             <input type="text" name="date" value={formData.date} onChange={handleInputChange} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-[16px] md:text-sm font-bold" />
