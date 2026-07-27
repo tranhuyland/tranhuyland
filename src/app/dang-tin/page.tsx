@@ -118,17 +118,10 @@ export default function DangTinPage() {
     });
   };
 
-  // ==========================================================================
-  // 🚀 CHIẾN LƯỢC MỚI: ĐỂ CHROME TỰ DÁN NGUYÊN BẢN, XỬ LÝ NGẦM Ở ONCHANGE
-  // ==========================================================================
   const handleMoTaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const rawText = e.target.value;
-
-    // Dọn sạch ký tự tàng hình \u2028 của Apple, ép về chuẩn xuống dòng thuần \n
     const cleanText = rawText.replace(/\r\n|\r|\u2028|\u2029/g, '\n');
-
     const scanResult = autoParseRealEstateText(cleanText, formData.linkMap);
-
     setFormData(prev => ({
       ...prev,
       ...scanResult,
@@ -153,19 +146,16 @@ export default function DangTinPage() {
   const handleKhuVucChange = async (e: ChangeEvent<HTMLSelectElement>) => {
     const khuVuc = e.target.value;
     setFormData(prev => ({ ...prev, khuVuc, linkMap: generateMapLink(prev.soNha, prev.duong, khuVuc, prev.linkMap) }));
-
     if (!khuVuc) return;
     setIsSearchingLoc(true);
     try {
       const query = formData.duong ? `${formData.duong}, ${khuVuc}, Đà Nẵng` : `${khuVuc}, Đà Nẵng`;
       let res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
       let data = await res.json();
-      
       if (!data || data.length === 0) {
         res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(khuVuc + ', Đà Nẵng')}&limit=1`);
         data = await res.json();
       }
-
       if (data && data.length > 0) {
         setFormData(prev => ({ ...prev, toaDo: `${parseFloat(data[0].lat).toFixed(6)}, ${parseFloat(data[0].lon).toFixed(6)}` }));
         setMapMountKey(Date.now());
@@ -180,12 +170,10 @@ export default function DangTinPage() {
       const query = `${formData.soNha ? formData.soNha + ' ' : ''}${formData.duong}, ${formData.khuVuc ? formData.khuVuc + ', ' : ''}Đà Nẵng`;
       let res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
       let data = await res.json();
-      
       if (!data || data.length === 0) {
         res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(formData.duong + ', Đà Nẵng')}&limit=1`);
         data = await res.json();
       }
-
       if (data && data.length > 0) {
         setFormData(prev => ({ ...prev, toaDo: `${parseFloat(data[0].lat).toFixed(6)}, ${parseFloat(data[0].lon).toFixed(6)}` }));
         setMapMountKey(Date.now()); 
@@ -196,28 +184,21 @@ export default function DangTinPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const showError = (msg: string) => { setMessage({ type: 'error', content: msg }); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-
     if (uploading || uploadingSoDo) return showError('⏳ Vui lòng đợi hình ảnh tải lên hoàn tất trước khi đăng tin!');
-
     const now = Date.now();
     const lastSubmit = localStorage.getItem('lastSubmitTHL');
     if (lastSubmit && now - parseInt(lastSubmit) < 15000) return showError('🚨 Vui lòng đợi 15 giây giữa 2 lần đăng tin.');
-
     const tieudeClean = formData.tieude.trim();
     const moTaClean = formData.moTa.trim();
     const giaClean = formData.gia.trim();
     const dienTichClean = formData.dienTich.trim();
-
     if (moTaClean.length < 20) return showError('❌ Mô tả quá ngắn (ít nhất 20 ký tự).');
     if (tieudeClean.length < 10) return showError('❌ Tiêu đề phải có ít nhất 10 ký tự.');
     if (!giaClean || !dienTichClean || !formData.khuVuc) return showError('❌ Vui lòng điền đủ Giá, Diện tích và Phường.');
-
     setLoading(true);
     setMessage({ type: '', content: '' });
-
     const today = new Date();
     const formattedDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
-
     const payload = {
       ...formData,
       tieude: tieudeClean, 
@@ -228,7 +209,6 @@ export default function DangTinPage() {
       ngayDang: formattedDate,
       isMatTien: formData.isMatTien || tieudeClean.toLowerCase().includes('mặt tiền')
     };
-
     try {
       await fetch(GOOGLE_WEBAPP_URL, {
         method: 'POST',
@@ -236,11 +216,9 @@ export default function DangTinPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-
       localStorage.setItem('lastSubmitTHL', Date.now().toString());
       setMessage({ type: 'success', content: '🎉 Đăng tin lên Google Sheet thành công!' });
       window.scrollTo({ top: 0, behavior: 'smooth' }); 
-      
       setFormData(INITIAL_FORM_STATE);
       setSelectedImagesPreview([]);
       setSoDoImagesPreview([]);
@@ -283,7 +261,6 @@ export default function DangTinPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-xs font-bold text-amber-600 uppercase mb-2 ml-1">Mô tả chi tiết (Dán vào đây để tự động quét)</label>
-            {/* 🔥 Gỡ bỏ onPaste, gài bùa whitespace-pre-wrap ép Chrome vẽ đúng Enter vật lý */}
             <textarea 
               required 
               rows={6} 
@@ -302,7 +279,6 @@ export default function DangTinPage() {
             <input required type="text" value={formData.tieude} onChange={(e) => setFormData({ ...formData, tieude: e.target.value })} placeholder="Ví dụ: Bán nhà mặt tiền..." className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-[16px] font-semibold focus:outline-none focus:border-amber-500 text-slate-700" />
           </div>
 
-          {/* 🔥 ĐÃ CÂN BẰNG TỤYỆT ĐỐI: Dùng h-8 flex items-end pb-1 để ghim tọa độ 2 ô input */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-bold text-slate-500 uppercase h-8 flex items-end pb-1 ml-1 leading-tight">
@@ -359,13 +335,13 @@ export default function DangTinPage() {
           <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-5 text-center">
             <label className="block text-xs font-black text-slate-700 uppercase mb-2 cursor-pointer">{uploading ? `📸 Đang nén tải: ${uploadProgress}%` : '📸 Bấm chọn loạt ảnh thực tế'}<input type="file" multiple accept="image/*" disabled={uploading} onChange={handleImageChange} className="hidden" /></label>
             {uploading && <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-2"><div className="bg-amber-500 h-full transition-all duration-300" style={{ width: `${uploadProgress}%` }}></div></div>}
-            {selectedImagesPreview.length > 0 && <div className="grid grid-cols-4 gap-2 mt-4">{selectedImagesPreview.map((url, idx) => (<div key={idx} className="relative aspect-square rounded-lg overflow-hidden border bg-white"><img src={url} alt="preview" className="w-full h-full object-cover" /></div>))}</div>}
+            {selectedImagesPreview.length > 0 && <div className="grid grid-cols-4 gap-2 mt-4">{selectedImagesPreview.map((url, idx) => (<div key={idx} className="relative aspect-square rounded-lg overflow-hidden border bg-white"><img src={url} alt={`Xem trước ảnh bất động sản ${idx + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" /></div>))}</div>}
           </div>
 
           <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-5 text-center">
             <label className="block text-xs font-black text-slate-700 uppercase mb-2 cursor-pointer">{uploadingSoDo ? `📑 Đang nén tải: ${uploadProgressSoDo}%` : '📑 Bấm chọn ảnh Sổ đỏ (Tùy chọn)'}<input type="file" multiple accept="image/*" disabled={uploadingSoDo} onChange={handleSoDoChange} className="hidden" /></label>
             {uploadingSoDo && <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-2"><div className="bg-amber-600 h-full transition-all duration-300" style={{ width: `${uploadProgressSoDo}%` }}></div></div>}
-            {soDoImagesPreview.length > 0 && <div className="grid grid-cols-4 gap-2 mt-4">{soDoImagesPreview.map((url, idx) => (<div key={idx} className="relative aspect-square rounded-lg overflow-hidden border bg-white"><img src={url} alt="sodo" className="w-full h-full object-cover" /></div>))}</div>}
+            {soDoImagesPreview.length > 0 && <div className="grid grid-cols-4 gap-2 mt-4">{soDoImagesPreview.map((url, idx) => (<div key={idx} className="relative aspect-square rounded-lg overflow-hidden border bg-white"><img src={url} alt={`Xem trước ảnh sổ đỏ ${idx + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" /></div>))}</div>}
           </div>
 
           <div className="flex items-center gap-2 pt-2"><input type="checkbox" id="isMatTien" checked={formData.isMatTien} onChange={(e) => setFormData({ ...formData, isMatTien: e.target.checked })} className="w-4 h-4 text-amber-500 border-slate-300 rounded" /><label htmlFor="isMatTien" className="text-xs font-bold text-slate-600 uppercase cursor-pointer select-none">Là mặt tiền kinh doanh</label></div>
