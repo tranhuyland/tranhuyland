@@ -17,7 +17,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 const SITE_URL = "https://tranhuyland.vn";
 const SITE_NAME = "Trần Huy Land";
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   ],
 
   alternates: {
-    canonical: SITE_URL,
+    canonical: "/",
   },
 
   robots: {
@@ -119,20 +119,7 @@ export default function RootLayout({
           as="image"
           fetchPriority="high"
         />
-        <link
-          rel="preload"
-          href="/_next/static/media/9e7b0a821b9dfcb4-s.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/_next/static/media/636a5ac981f94f8b-s.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+
         <link rel="dns-prefetch" href="//i.postimg.cc" />
         <link rel="dns-prefetch" href="//images.unsplash.com" />
         <link rel="dns-prefetch" href="//res.cloudinary.com" />

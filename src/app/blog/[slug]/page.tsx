@@ -96,8 +96,57 @@ export default async function BlogDetailPage({ params }: Props) {
     return khuVuc && blogText.includes(khuVuc);
   }).slice(0, 5);
 
+  const blogImage = blog.image && blog.image.startsWith('http')
+    ? blog.image
+    : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&h=630&q=80';
+
+  const blogPostingSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": blog.title,
+    "description": blog.excerpt || "Tư vấn và chia sẻ kinh nghiệm đầu tư bất động sản chuyên sâu tại Đà Nẵng.",
+    "image": {
+      "@type": "ImageObject",
+      "url": blogImage,
+      "width": 1200,
+      "height": 630,
+    },
+    "datePublished": blog.date || undefined,
+    "dateModified": blog.date || undefined,
+    "author": {
+      "@type": "Person",
+      "name": "Trần Huy",
+      "url": "https://tranhuyland.vn",
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Trần Huy Land",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://tranhuyland.vn/icon.png",
+      },
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://tranhuyland.vn/blog/${slug}`,
+    },
+    "inLanguage": "vi-VN",
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "https://tranhuyland.vn/" },
+      { "@type": "ListItem", "position": 2, "name": "Góc tư vấn", "item": "https://tranhuyland.vn/blog" },
+      { "@type": "ListItem", "position": 3, "name": blog.title, "item": `https://tranhuyland.vn/blog/${slug}` },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans text-slate-900 selection:bg-orange-500 selection:text-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Header />
 
       <main className="flex-1 pt-28 pb-20 max-w-3xl w-full mx-auto px-4 sm:px-6">

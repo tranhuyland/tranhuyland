@@ -29,7 +29,7 @@ export default function Footer() {
             <div className="relative h-10 w-10">
               <Image src="https://res.cloudinary.com/ds6k0kfbz/image/upload/v1782399841/n0v7ti6adzvy4sf9fhpn.avif" alt="Logo Trần Huy Land" title="Trần Huy Land" fill sizes="40px" className="object-contain" loading="lazy" />
             </div>
-            <h2 className="text-white font-extrabold text-base tracking-wide">TRẦN HUY LAND</h2>
+            <p className="text-white font-extrabold text-base tracking-wide">TRẦN HUY LAND</p>
           </div>
           <p className="leading-relaxed">
             Chuyên nhận ký gửi môi giới nhà phố, đất nền, bất động sản thổ cư trung tâm thành phố Đà Nẵng.
@@ -38,7 +38,7 @@ export default function Footer() {
 
         <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-4">
           <div>
-            <h3 className="text-white font-bold text-sm uppercase mb-5">ĐỊA BÀN KHẢO SÁT</h3>
+            <h2 className="text-white font-bold text-sm uppercase mb-5">ĐỊA BÀN KHẢO SÁT</h2>
             <ul className="space-y-3 text-sm">
               {topLocations.map((loc) => (
                 <li key={loc.slug}>
@@ -51,7 +51,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-bold text-sm uppercase mb-5">PHÂN KHÚC</h3>
+            <h2 className="text-white font-bold text-sm uppercase mb-5">PHÂN KHÚC</h2>
             <ul className="space-y-3 text-sm">
               {topTypes.map((type) => (
                 <li key={type.slug}>
@@ -65,7 +65,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="text-white font-bold text-sm uppercase mb-5">LIÊN HỆ</h3>
+          <h2 className="text-white font-bold text-sm uppercase mb-5">LIÊN HỆ</h2>
           <ul className="space-y-3 text-sm">
             <li className="flex items-start gap-3">
               <MapPin className="w-5 h-5 text-orange-500 shrink-0" /> 

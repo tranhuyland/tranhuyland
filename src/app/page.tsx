@@ -7,8 +7,25 @@ import About from "@/components/About";
 import Blog from "@/components/Blog";
 import ContactCTA from "@/components/ContactCTA";
 import Footer from "@/components/Footer";
+import type { Metadata } from "next";
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "Trần Huy Land | Kho Nhà Đất Chính Chủ Hải Châu Cẩm Lệ Đà Nẵng",
+  description:
+    "Mua bán, ký gửi nhà đất chính chủ uy tín tại Hải Châu, Cẩm Lệ, Đà Nẵng. Cập nhật giỏ hàng thực tế mỗi ngày: Nhà mặt tiền Cẩm Bá Thước, nhà kiệt ô tô Cách Mạng Tháng 8. Pháp lý minh bạch, có sẵn sổ đỏ bản vẽ xem ngay.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Trần Huy Land | Kho Nhà Đất Chính Chủ Hải Châu Cẩm Lệ Đà Nẵng",
+    description:
+      "Mua bán, ký gửi nhà đất chính chủ uy tín tại Đà Nẵng. Cập nhật nhà đất thực tế mỗi ngày.",
+    url: "/",
+    type: "website",
+  },
+};
 
 function ListingFallback() {
   return (
