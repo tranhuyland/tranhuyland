@@ -10,7 +10,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWidgets from "@/components/FloatingWidgets";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -38,7 +38,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: blog.title,
     description,
     keywords: [
-      blog.title,
       "tư vấn bất động sản đà nẵng",
       "kinh nghiệm mua nhà đất",
       "pháp lý sổ đỏ",
@@ -65,6 +64,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         },
       ],
       type: "article",
+      publishedTime: blog.date || undefined,
+      authors: ["Trần Huy"],
     },
     twitter: {
       card: "summary_large_image",
@@ -84,6 +85,8 @@ export default async function BlogDetailPage({ params }: Props) {
 
   const contentBody = blog.content || "";
 
+  const blogImageUrl = blog.image || "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1200&auto=format&fit=crop";
+
   const currentCategory = blog.category || "";
   const relatedBlogs = currentCategory
     ? blogs.filter(b => b.slug !== slug && (b.category || "") === currentCategory).slice(0, 4)
@@ -96,8 +99,37 @@ export default async function BlogDetailPage({ params }: Props) {
     return khuVuc && blogText.includes(khuVuc);
   }).slice(0, 5);
 
+  const blogJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": blog.title,
+    "description": blog.excerpt || "Tư vấn và chia sẻ kinh nghiệm đầu tư bất động sản chuyên sâu tại Đà Nẵng.",
+    "image": blogImageUrl,
+    "author": {
+      "@type": "Person",
+      "name": "Trần Huy"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Trần Huy Land",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://tranhuyland.vn/icon.png"
+      }
+    },
+    "datePublished": blog.date || undefined,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://tranhuyland.vn/blog/${slug}`
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans text-slate-900 selection:bg-orange-500 selection:text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+      />
       <Header />
 
       <main className="flex-1 pt-28 pb-20 max-w-3xl w-full mx-auto px-4 sm:px-6">
@@ -145,18 +177,18 @@ export default async function BlogDetailPage({ params }: Props) {
         <article className="prose prose-slate max-w-none text-[#222222] text-[17px] md:text-[18px] leading-[1.8] tracking-[0.005em] whitespace-pre-line">
           <ReactMarkdown
             components={{
-              strong: ({ node, ...props }) => <strong className="font-bold text-[#111111]" {...props} />,
+              strong: ({ ...props }) => <strong className="font-bold text-[#111111]" {...props} />,
               
-              p: ({ node, ...props }) => <p className="mb-6 last:mb-0" {...props} />,
+              p: ({ ...props }) => <p className="mb-6 last:mb-0" {...props} />,
               
-              h2: ({ node, ...props }) => <h2 className="text-[20px] md:text-[22px] font-bold text-[#111111] mt-12 mb-4 pb-2 border-b border-slate-100" {...props} />,
+              h2: ({ ...props }) => <h2 className="text-[20px] md:text-[22px] font-bold text-[#111111] mt-12 mb-4 pb-2 border-b border-slate-100" {...props} />,
               
-              h3: ({ node, ...props }) => <h3 className="text-[18px] md:text-[19px] font-bold text-slate-800 mt-8 mb-3" {...props} />,
+              h3: ({ ...props }) => <h3 className="text-[18px] md:text-[19px] font-bold text-slate-800 mt-8 mb-3" {...props} />,
               
-              ul: ({ node, ...props }) => <ul className="list-disc pl-5 mb-6 space-y-2.5 text-[#222222]" {...props} />,
-              li: ({ node, ...props }) => <li className="leading-[1.8]" {...props} />,
+              ul: ({ ...props }) => <ul className="list-disc pl-5 mb-6 space-y-2.5 text-[#222222]" {...props} />,
+              li: ({ ...props }) => <li className="leading-[1.8]" {...props} />,
               
-              a: ({ node, href, children, ...props }) => {
+              a: ({ href, children, ...props }) => {
                 if (!href) return <span {...props}>{children}</span>;
 
                 const isInternal = href.startsWith("/") || href.includes("tranhuyland.vn");
