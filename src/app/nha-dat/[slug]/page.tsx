@@ -9,7 +9,7 @@ import { layUrlAnhChuan } from "@/lib/utils";
 import RelatedProducts from "@/components/RelatedProducts";
 import Link from "next/link";
 import { Home, ChevronRight } from "lucide-react";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 import type { Metadata } from "next";
 
 export const revalidate = 60;
@@ -210,7 +210,7 @@ export default async function NhaDatDetail({ params }: Props) {
       <main className="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
         <PropertyClient item={enrichedItem} initialCoverImage={imageSeo} />
 
-        <div className="mt-16">
+        <div className="mt-16 cv-auto">
           <RelatedProducts currentItem={enrichedItem} allItems={allItems} />
         </div>
       </main>

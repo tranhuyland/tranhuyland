@@ -41,3 +41,9 @@ body {
 /* 🌟 Ẩn thanh cuộn nhưng vẫn cuộn được */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* 🚀 Tối ưu render: Trình duyệt bỏ qua phần dưới gấp màn hình, chỉ vẽ khi cuộn tới */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}

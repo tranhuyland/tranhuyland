@@ -111,6 +111,7 @@ export default function RootLayout({
           }}
         />
 
+        {/* Preload critical fonts for LCP text */}
         <link
           rel="preload"
           href="/_next/static/media/9e7b0a821b9dfcb4-s.woff2"
@@ -125,6 +126,14 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
+
+        {/* Preconnect to image CDNs to reduce connection latency */}
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://i.postimg.cc" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://i.postimg.cc" />
+        <link rel="dns-prefetch" href="https://lh3.googleusercontent.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
 
       <body
