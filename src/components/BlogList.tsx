@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Heart, Share2 } from "lucide-react";
 
-// 📁 DANH MỤC CÓ TÍCH HỢP TAB "ĐÃ LƯU"
 const CATEGORIES = [
   { id: "all", label: "📚 Tất cả bài viết" },
   { id: "chia-se", label: "💡 Chia sẻ kinh nghiệm", value: "Chia sẻ kinh nghiệm" },
@@ -71,7 +70,6 @@ export default function BlogList({ allBlogItems = [] }: BlogListProps) {
     }
   };
 
-  // 🚀 TỐI ƯU 1: LỌC RA DANH SÁCH BÀI "ĐÃ LƯU CÓ THẬT" TRÊN SHEET VÀO MỘT BIẾN
   const actualSavedBlogs = useMemo(() => {
     return safeBlogs.filter(blog => {
       const targetSlug = (blog?.slug || blog?.Slug || "").toString();
@@ -79,12 +77,11 @@ export default function BlogList({ allBlogItems = [] }: BlogListProps) {
     });
   }, [safeBlogs, favoriteSlugs]);
 
-  const savedCount = actualSavedBlogs.length; // <--- Con số luôn luôn chính xác tuyệt đối!
+  const savedCount = actualSavedBlogs.length;
 
-  // 🚀 TỐI ƯU 3: THUẬT TOÁN LỌC KÉP KHÁNG LỖI CHỮ HOA/THƯỜNG
   const filteredBlogs = useMemo(() => {
     if (activeTab === "all") return safeBlogs;
-    if (activeTab === "saved") return actualSavedBlogs; // Tái sử dụng mảng trên, tiết kiệm RAM!
+    if (activeTab === "saved") return actualSavedBlogs;
 
     const selectedCat = CATEGORIES.find(c => c.id === activeTab);
     const targetVal = (selectedCat?.value || "").toLowerCase().trim();
@@ -97,7 +94,6 @@ export default function BlogList({ allBlogItems = [] }: BlogListProps) {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-8">
-      {/* 🌟 THANH BẤM CHỌN DANH MỤC */}
       <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap">
         {CATEGORIES.map((tab) => {
           const isSavedTab = tab.id === "saved";
@@ -121,7 +117,6 @@ export default function BlogList({ allBlogItems = [] }: BlogListProps) {
         })}
       </div>
 
-      {/* 🌟 LƯỚI BÀI VIẾT */}
       {filteredBlogs.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-slate-200 shadow-sm max-w-2xl mx-auto">
           <p className="text-slate-400 font-bold text-sm">
@@ -142,12 +137,10 @@ export default function BlogList({ allBlogItems = [] }: BlogListProps) {
             const isSaved = favoriteSlugs.includes(currentSlug);
 
             return (
-              // 🚀 TỐI ƯU 2: Bọc thẻ div ngoài cùng để bảo vệ DOM, tách thẻ Link ra 2 khúc
               <div
                 key={currentSlug}
                 className="group bg-white rounded-3xl overflow-hidden border border-slate-100 hover:border-orange-200 shadow-xs hover:shadow-xl hover:shadow-orange-500/5 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1 relative"
               >
-                {/* PHẦN 1: KHỐI ẢNH (Bấm vào ảnh nhảy trang) */}
                 <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden">
                   <Link href={`/blog/${currentSlug}`} className="absolute inset-0 z-0">
                     <Image src={currentImage} alt={`Ảnh bài viết: ${currentTitle}`} title={currentTitle} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw" loading="lazy" />
@@ -157,7 +150,6 @@ export default function BlogList({ allBlogItems = [] }: BlogListProps) {
                     {currentCat}
                   </span>
 
-                  {/* NÚT BẤM NỔI (Đứng độc lập, bấm cực nhạy không bị cản) */}
                   <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
                     <div role="button" tabIndex={0} onClick={(e) => handleShare(blog, e)} className="w-8 h-8 rounded-full bg-white/90 hover:bg-white text-slate-600 hover:text-orange-500 flex items-center justify-center shadow-md transition-all active:scale-90 cursor-pointer" title="Chia sẻ">
                       <Share2 size={15} />
@@ -168,12 +160,11 @@ export default function BlogList({ allBlogItems = [] }: BlogListProps) {
                   </div>
                 </div>
 
-                {/* PHẦN 2: KHỐI NỘI DUNG (Bấm vào chữ nhảy trang) */}
                 <div className="p-5 flex flex-col flex-1">
                   <span className="text-xs text-slate-400 font-bold mb-2 block">📅 {currentDate}</span>
                   <Link href={`/blog/${currentSlug}`} className="flex-1 flex flex-col justify-between">
                     <div>
-                      <h2 className="text-base font-black text-slate-800 line-clamp-2 group-hover:text-orange-600 mb-2.5 leading-snug">{currentTitle}</h2>
+                      <h3 className="text-base font-black text-slate-800 line-clamp-2 group-hover:text-orange-600 mb-2.5 leading-snug">{currentTitle}</h3>
                       <p className="text-slate-500 text-sm line-clamp-3 leading-relaxed">{currentExcerpt}</p>
                     </div>
                     <div className="pt-4 mt-4 border-t border-slate-50 flex items-center text-orange-500 font-bold text-xs gap-1">

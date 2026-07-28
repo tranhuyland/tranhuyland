@@ -39,7 +39,7 @@ export default function RelatedProducts({ currentItem, allItems }: RelatedProduc
           return (
             <Link 
               href={`/nha-dat/${item.slug}`} 
-              key={index}
+              key={item.slug || index}
               className="group flex-none w-[200px] sm:w-[240px] bg-white rounded-[1.5rem] overflow-hidden shadow-sm hover:shadow-xl hover:shadow-orange-500/10 border border-slate-100 hover:border-orange-200 transition-all duration-300 transform hover:-translate-y-1 block snap-start"
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">

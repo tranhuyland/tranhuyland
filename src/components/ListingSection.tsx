@@ -42,7 +42,6 @@ export default function ListingSection({ allBdsItems = [], forceDistrict }: List
   const itemsPerPage = 6;
   const activeFiltersCount = Object.values(filters).filter(v => v !== "all").length;
 
-  // 1. Khởi tạo & nạp cache từ bộ nhớ trình duyệt
   useEffect(() => {
     setIsClient(true);
     try {
@@ -55,7 +54,6 @@ export default function ListingSection({ allBdsItems = [], forceDistrict }: List
       if (savedTab) setActiveLoaiHinh(savedTab);
     } catch (e) {}
 
-    // Cơ chế bão lãnh khi Safari/Chrome Mobile dùng BFCache (đóng băng trang)
     const handlePageShow = (event: any) => {
       if (event.persisted) {
         const savedPos = sessionStorage.getItem("thl_scroll_pos");
@@ -69,14 +67,13 @@ export default function ListingSection({ allBdsItems = [], forceDistrict }: List
     return () => window.removeEventListener('pageshow', handlePageShow);
   }, []);
 
-  // 2. ENGINE NEO VỊ TRÍ CUỘN (Hoạt động sau khi danh sách đã nạp xong DOM)
   useEffect(() => {
     const savedPos = sessionStorage.getItem("thl_scroll_pos");
     if (savedPos && safeBdsItems.length > 0) {
       const targetY = parseInt(savedPos, 10);
       const timer = setTimeout(() => {
         window.scrollTo({ top: targetY, behavior: "instant" });
-        sessionStorage.removeItem("thl_scroll_pos"); // 🔥 CHÍ MẠNG: Xóa ngay để bấm chuyển trang không bị nhảy lại!
+        sessionStorage.removeItem("thl_scroll_pos");
       }, 30);
       return () => clearTimeout(timer);
     }
@@ -305,7 +302,7 @@ export default function ListingSection({ allBdsItems = [], forceDistrict }: List
               {totalPages > 1 && (
                 <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2 mt-12 sm:mt-16">
                   <button onClick={() => handlePageChange(1)} disabled={currentPage === 1} aria-label="Trang đầu" 
-                    className={`hidden sm:flex items-center justify-center px-3 h-10 rounded-xl font-bold transition-all ${currentPage === 1 ? 'bg-slate-100 text-slate-300 cursor-not-allowed' : 'bg-white border borderslate-200 text-slate-600 hover:border-orange-300 hover:text-orange-600 shadow-sm active:scale-95'}`}
+                    className={`hidden sm:flex items-center justify-center px-3 h-10 rounded-xl font-bold transition-all ${currentPage === 1 ? 'bg-slate-100 text-slate-300 cursor-not-allowed' : 'bg-white border border-slate-200 text-slate-600 hover:border-orange-300 hover:text-orange-600 shadow-sm active:scale-95'}`}
                   >
                     <ChevronsLeft size={18} />
                   </button>
