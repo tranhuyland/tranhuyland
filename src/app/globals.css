@@ -17,12 +17,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* 🚀 Performance: content-visibility for offscreen sections */
-section {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 500px;
-}
-
 /* 🚀 Prevent layout shift during font load */
 @font-face {
   font-family: 'Plus Jakarta Sans Fallback';
