@@ -9,7 +9,7 @@ import { layUrlAnhChuan } from "@/lib/utils";
 import RelatedProducts from "@/components/RelatedProducts";
 import Link from "next/link";
 import { Home, ChevronRight } from "lucide-react";
-import { cache, Suspense } from "react";
+import { cache } from "react";
 import type { Metadata } from "next";
 
 export const revalidate = 60;
@@ -138,23 +138,41 @@ export default async function NhaDatDetail({ params }: Props) {
     numericPrice = numericPrice * 1000000;
   }
 
+  const rawDate = item.ngayDang || item.NgayDang || item.ngay || "";
+  const parseDateToISO = (dateStr: string): string => {
+    if (!dateStr) return new Date().toISOString().split("T")[0];
+    if (dateStr.includes("T")) return dateStr.split("T")[0];
+    const parts = dateStr.trim().split(/[-/]/);
+    if (parts.length === 3) {
+      const [p1, p2, p3] = parts.map(Number);
+      if (!isNaN(p1) && !isNaN(p2) && !isNaN(p3)) {
+        if (p3 > 31) return `${p3}-${String(p2).padStart(2, "0")}-${String(p1).padStart(2, "0")}`;
+        if (p1 > 31) return `${p1}-${String(p2).padStart(2, "0")}-${String(p3).padStart(2, "0")}`;
+      }
+    }
+    return new Date().toISOString().split("T")[0];
+  };
+  const isoDatePosted = parseDateToISO(rawDate);
+
+  const propertyTypeSchema = typeSlug === "dat" ? "Place" : typeSlug === "can-ho" ? "Apartment" : "SingleFamilyResidence";
+
   const jsonLdSchema = {
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
     "name": titleText,
     "description": `${titleText} tại khu vực ${locationText}. Diện tích thực tế ${item.dienTich || "Chưa rõ"}.`,
     "url": `https://tranhuyland.vn/nha-dat/${slug}`,
-    "datePosted": item.ngayDang || new Date().toISOString().split("T")[0],
+    "datePosted": isoDatePosted,
     "image": imageSeo,
     "offers": {
       "@type": "Offer",
-      "price": numericPrice > 0 ? numericPrice : rawPrice,
+      "price": numericPrice > 0 ? numericPrice : 0,
       "priceCurrency": "VND",
-      "availability": "https://schema.org/InStock",
+      "availability": "InStock",
       "url": `https://tranhuyland.vn/nha-dat/${slug}`
     },
     "about": {
-      "@type": "SingleFamilyResidence",
+      "@type": propertyTypeSchema,
       "name": titleText,
       "address": {
         "@type": "PostalAddress",
@@ -164,6 +182,17 @@ export default async function NhaDatDetail({ params }: Props) {
         "addressCountry": "VN"
       }
     }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "https://tranhuyland.vn" },
+      ...(locationName ? [{ "@type": "ListItem", "position": 2, "name": locationName, "item": `https://tranhuyland.vn/vi-tri/${locationSlug}` }] : []),
+      ...(typeLabel ? [{ "@type": "ListItem", "position": locationName ? 3 : 2, "name": typeLabel, "item": `https://tranhuyland.vn/loai-hinh/${typeSlug}` }] : []),
+      { "@type": "ListItem", "position": (locationName ? 1 : 0) + (typeLabel ? 1 : 0) + 2, "name": titleText, "item": `https://tranhuyland.vn/nha-dat/${slug}` }
+    ]
   };
 
   const enrichedItem = {
@@ -177,6 +206,10 @@ export default async function NhaDatDetail({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <Header />
