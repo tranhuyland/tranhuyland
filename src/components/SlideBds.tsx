@@ -116,6 +116,7 @@ export default function SlideBds({
               loading="eager"
               sizes="(max-width: 768px) 100vw, 800px" 
               className="object-cover transition-opacity duration-300"
+              placeholder="empty"
             />
           </div>
         )}
