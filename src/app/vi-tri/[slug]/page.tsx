@@ -87,8 +87,22 @@ export default async function LocationPage({ params }: Props) {
     return bTitle.includes(locationNameLower) || bExcerpt.includes(locationNameLower);
   }).slice(0, 4);
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "https://tranhuyland.vn" },
+      { "@type": "ListItem", "position": 2, "name": "Khu vực", "item": "https://tranhuyland.vn" },
+      { "@type": "ListItem", "position": 3, "name": exactName, "item": `https://tranhuyland.vn/vi-tri/${slug}` }
+    ]
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Header />
 
       <nav className="sticky top-[56px] md:top-[64px] z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">

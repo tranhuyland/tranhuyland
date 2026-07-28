@@ -16,6 +16,8 @@ const graph = {
       logo: {
         "@type": "ImageObject",
         url: LOGO_URL,
+        width: 512,
+        height: 512,
       },
       image: LOGO_URL,
       telephone: PHONE,
@@ -43,6 +45,7 @@ const graph = {
         },
         "query-input": "required name=search_term_string",
       },
+      /* SearchAction uses client-side filtering; URL-based search is not available */
     },
     {
       "@type": "RealEstateAgent",

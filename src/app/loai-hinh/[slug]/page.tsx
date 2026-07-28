@@ -99,8 +99,22 @@ export default async function PropertyTypePage({ params }: Props) {
     return true;
   });
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Trang chủ", "item": "https://tranhuyland.vn" },
+      { "@type": "ListItem", "position": 2, "name": "Loại hình", "item": "https://tranhuyland.vn" },
+      { "@type": "ListItem", "position": 3, "name": exactName, "item": `https://tranhuyland.vn/loai-hinh/${slug}` }
+    ]
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Header />
 
       <nav className="sticky top-[56px] z-40 bg-white border-b border-slate-200 shadow-sm w-full">
