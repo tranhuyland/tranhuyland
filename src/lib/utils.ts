@@ -13,7 +13,7 @@ export const layUrlAnhChuan = (chuoiAnh: string, width: number = 700) => {
   
   // Tách chuỗi và lấy ảnh đầu tiên an toàn
   const danhSach = chuoiAnh.split(",").map(a => a.trim()).filter(a => a.startsWith("http"));
-  let url = danhSach.length > 0 ? danhSach[0] : ANH_MAC_DINH;
+  const url = danhSach.length > 0 ? danhSach[0] : ANH_MAC_DINH;
   
   // 🔥 BÙA CHÚ 1: CLOUDINARY (Ép WebP, tự tinh chỉnh chất lượng & Bóp chiều ngang)
   if (url.includes("res.cloudinary.com")) {

@@ -96,13 +96,13 @@ export const extractPriceInBillion = (giaRaw: any, soGiaRaw: any) => {
     return so >= 100 ? so / 1000 : so; 
   }
   if (!giaRaw || typeof giaRaw !== 'string') return 0;
-  let giaStr = giaRaw.toLowerCase().replace(/x/g, '0').replace(/,/g, '.'); 
+  const giaStr = giaRaw.toLowerCase().replace(/x/g, '0').replace(/,/g, '.'); 
   const tyMatch = giaStr.match(/([\d.]+)\s*(?:tỷ|ty)\s*([\d]+)?/);
   if (tyMatch) {
     let ty = parseFloat(tyMatch[1]);
-    let trieuStr = tyMatch[2];
+    const trieuStr = tyMatch[2];
     if (trieuStr) {
-       let trieuNum = trieuStr.length === 1 ? parseInt(trieuStr) * 100 : (trieuStr.length === 2 ? parseInt(trieuStr) * 10 : parseInt(trieuStr.substring(0,3)));
+       const trieuNum = trieuStr.length === 1 ? parseInt(trieuStr) * 100 : (trieuStr.length === 2 ? parseInt(trieuStr) * 10 : parseInt(trieuStr.substring(0,3)));
        ty += trieuNum / 1000;
     }
     return ty;

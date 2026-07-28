@@ -5,7 +5,7 @@
 // 1. THUẬT TOÁN GỌT GIÁ TIỀN (5,900 tỷ -> 5,9 tỷ | 4.000 tỷ -> 4 tỷ)
 export function formatCleanPrice(raw: string): string {
   if (!raw) return '';
-  let str = raw.trim().toLowerCase();
+  const str = raw.trim().toLowerCase();
 
   const floatMatch = str.match(/(\d+)[.,](\d+)\s*(tỷ|ty|triệu|trieu)?/i);
   if (floatMatch) {
@@ -39,7 +39,7 @@ export function generateMapLink(soNha: string, duong: string, phuong: string, cu
 
 // 3. SIÊU THUẬT TOÁN QUÉT MÔ TẢ TỰ ĐỘNG
 export function autoParseRealEstateText(text: string, currentMapLink: string) {
-  let parsed = {
+  const parsed = {
     moTa: text,
     gia: '',
     dienTich: '',
@@ -57,17 +57,17 @@ export function autoParseRealEstateText(text: string, currentMapLink: string) {
   if (priceMatch2) {
     parsed.gia = formatCleanPrice(`${priceMatch2[1]},${priceMatch2[2]} tỷ`);
   } else if (priceMatch1) {
-    let num1 = priceMatch1[1];
-    let num2 = priceMatch1[2];
-    let unit = priceMatch1[3].toLowerCase();
-    let rawPrice = num2 ? `${num1},${num2} ${unit}` : `${num1} ${unit}`;
+    const num1 = priceMatch1[1];
+    const num2 = priceMatch1[2];
+    const unit = priceMatch1[3].toLowerCase();
+    const rawPrice = num2 ? `${num1},${num2} ${unit}` : `${num1} ${unit}`;
     parsed.gia = formatCleanPrice(rawPrice);
   }
 
   const areaMatch = text.match(/(\d+)(?:\s*[.,]\s*(\d+))?\s*(?:m2|m²)/i);
   if (areaMatch) {
-    let num1 = areaMatch[1];
-    let num2 = areaMatch[2];
+    const num1 = areaMatch[1];
+    const num2 = areaMatch[2];
     parsed.dienTich = num2 ? `${num1},${num2} m2` : `${num1} m2`;
   }
 
