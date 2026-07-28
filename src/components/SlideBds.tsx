@@ -77,7 +77,7 @@ export default function SlideBds({
       return `https://maps.google.com/maps?q=${encodeURIComponent(searchQuery)}&z=15&output=embed`;
     }
 
-    let clean = raw.trim();
+    const clean = raw.trim();
     if (clean.includes('<iframe')) {
       const match = clean.match(/src=["'](.*?)["']/);
       if (match && match[1]) return match[1];

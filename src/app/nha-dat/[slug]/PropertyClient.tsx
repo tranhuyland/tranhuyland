@@ -77,7 +77,7 @@ const calculateGiaM2 = (item: any) => {
     const dtMatch = dtStr.match(/([\d,.]+)/); 
     let dtNum = 0;
     if (dtMatch) {
-        let cleanDt = dtMatch[1].replace(/[.,]+$/, ''); 
+        const cleanDt = dtMatch[1].replace(/[.,]+$/, ''); 
         dtNum = parseFloat(cleanDt.replace(/,/g, '.'));
     }
     if (giaTriTrieu > 0 && dtNum > 0) {
