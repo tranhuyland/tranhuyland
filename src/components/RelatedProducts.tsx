@@ -20,7 +20,7 @@ export default function RelatedProducts({ currentItem, allItems }: RelatedProduc
   if (relatedItems.length === 0) return null;
 
   return (
-    <section className="mt-16 mb-8 border-t border-slate-100 pt-10">
+    <section className="mt-16 mb-8 border-t border-slate-100 pt-10 cv-auto">
       <div className="flex items-center justify-between mb-6 px-1">
         <div>
            <h2 className="text-xl font-extrabold text-slate-800">

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Heart, ImageIcon, BedDouble, Bath, Clock, Share2 } from "lucide-react";
@@ -12,7 +12,7 @@ interface BdsCardProps {
   onToggleFavorite: (e: React.MouseEvent) => void;
 }
 
-export default function BdsCard({ item, rank, isFavorite, onToggleFavorite }: BdsCardProps) {
+function BdsCard({ item, rank, isFavorite, onToggleFavorite }: BdsCardProps) {
   const thumbnail = layUrlAnhChuan(item?.anh, 400);
   const displayLocation = item?.khuVuc || item?.diaChi || item?.diaChiFull || item?.khuVucFull || "Đà Nẵng";
   const soLuongAnh = useMemo(() => countImages(item), [item]);
@@ -151,3 +151,5 @@ export default function BdsCard({ item, rank, isFavorite, onToggleFavorite }: Bd
     </div>
   );
 }
+
+export default memo(BdsCard);
